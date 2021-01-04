@@ -10,7 +10,6 @@ from sklearn.neighbors import KNeighborsClassifier
 
 # Daten erstellen mit One Hot Encoding:
 from data_prep import Data_Preperation
-from principal_component_analysis import get_principalComponents
 
 data_prep = Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run()
