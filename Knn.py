@@ -10,11 +10,16 @@ from sklearn.neighbors import KNeighborsClassifier
 
 # Daten erstellen mit One Hot Encoding:
 from data_prep import Data_Preperation
+from principal_component_analysis import get_principalComponents
 
 data_prep = Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run()
 
 # TODO: Features elimination, da KNN ungenau wird, je größer die Dimension
+
+# PCA:
+
+x_train, x_test = get_principalComponents(x_train, x_test, 2)
 
 # KNN
 """
@@ -27,7 +32,7 @@ Schlussendlich wird das neue K in die KNN-Funktion eingesetzt
 error = []
 
 # Berechnet den Fehler für alle K Werte zwischen 1 und 40
-for i in range(1, 100):
+for i in range(1, 40):
     knn = KNeighborsClassifier(n_neighbors=i)
     knn.fit(x_train, y_train)
     pred_i = knn.predict(x_test)
@@ -45,7 +50,7 @@ plt.ylabel('Mean Error')
 plt.show()
 
 # KNN mit bestmöglichen K
-knn = KNeighborsClassifier(n_neighbors=35)
+knn = KNeighborsClassifier(n_neighbors=2)
 knn.fit(x_train, y_train)
 y_pred = knn.predict(x_test)
-print(mean_squared_error(y_pred, y_test))
+print("MSE=", mean_squared_error(y_pred, y_test))
