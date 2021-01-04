@@ -25,6 +25,10 @@ def get_principalComponents(x_train, x_test, n_components):
 
 
 def __test():
+    """Private Testmethode, nur zum Testen von PCA, nicht importieren!
+
+
+    """
     data_prep = Data_Preperation()
     x_train, x_test, y_train, y_test = data_prep.run()
 
