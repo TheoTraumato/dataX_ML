@@ -28,7 +28,8 @@ x = df.drop('class', axis=1)
 y = y.replace({'p': 1, 'e': 0})
 
 #One hot encoding
-
+dummy_list = x.columns.values
+x = pd.get_dummies(x, columns=dummy_list, drop_first=True)
 
 # Ridge Regression:
 
