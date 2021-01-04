@@ -18,7 +18,6 @@ x_train, x_test, y_train, y_test = data_prep.run()
 # TODO: Features elimination, da KNN ungenau wird, je größer die Dimension
 
 # PCA:
-
 x_train, x_test = get_principalComponents(x_train, x_test, 2)
 
 # KNN
@@ -50,7 +49,12 @@ plt.ylabel('Mean Error')
 plt.show()
 
 # KNN mit bestmöglichen K
-knn = KNeighborsClassifier(n_neighbors=2)
+knn = KNeighborsClassifier(n_neighbors=8)
 knn.fit(x_train, y_train)
 y_pred = knn.predict(x_test)
 print("MSE=", mean_squared_error(y_pred, y_test))
+
+#confusion matrix
+from sklearn.metrics import classification_report, confusion_matrix
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred))
