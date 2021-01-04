@@ -28,28 +28,22 @@ Zuerst wird für jedes K in range (1,40) der MSE visualisiert, um das beste K zu
 Schlussendlich wird das neue K in die KNN-Funktion eingesetzt
 """
 
-error = []
+# CV für Ermittlung des optimalen k
+"""
+Möglichst wenig giftige Pilze als nichtgiftig = wenig FN --> F1
+"""
+params = {"n_neighbors": range(1,50)}
+knn = KNeighborsClassifier()
+clf = GridSearchCV(knn, params, scoring="f1", cv=5)
+clf.fit(x_train, y_train)
 
-# Berechnet den Fehler für alle K Werte zwischen 1 und 40
-for i in range(1, 40):
-    knn = KNeighborsClassifier(n_neighbors=i)
-    knn.fit(x_train, y_train)
-    pred_i = knn.predict(x_test)
-    error.append(np.mean(pred_i != y_test))
+best_k = clf.best_params_["n_neighbors"]
+print(best_k)
+print(f"{best_k}-Nearest Neighboirs achieved a score of {clf.best_score_}")
 
-# Visualisierung der Fehlerwerte
-import matplotlib.pyplot as plt
-
-plt.figure(figsize=(12, 6))
-plt.plot(range(1, 40), error, color='red', linestyle='dashed', marker='o',
-         markerfacecolor='blue', markersize=10)
-plt.title('Error Rate K Value')
-plt.xlabel('K Value')
-plt.ylabel('Mean Error')
-plt.show()
 
 # KNN mit bestmöglichen K
-knn = KNeighborsClassifier(n_neighbors=8)
+knn = KNeighborsClassifier(n_neighbors=best_k)
 knn.fit(x_train, y_train)
 y_pred = knn.predict(x_test)
 print("MSE=", mean_squared_error(y_pred, y_test))
@@ -60,5 +54,6 @@ print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
 """
-MSE= 0.06351550960118169
+1-Nearest Neighboirs achieved a score of 0.9367484780854021
+MSE= 0.07040866568193008
 """
