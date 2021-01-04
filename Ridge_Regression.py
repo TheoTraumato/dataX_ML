@@ -13,6 +13,23 @@ from data_prep import Data_Preperation
 data_prep = Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run()
 
+# Read data
+df = pd.read_csv('archive/mushrooms.csv')
+print(df)
+
+# Data Preperation
+df.drop_duplicates(inplace=True)
+
+print('Relative Menge an Missing Values: ', df.isna().sum() / (len(df)) * 100)
+
+y = df['class']
+x = df.drop('class', axis=1)
+
+y = y.replace({'p': 1, 'e': 0})
+
+#One hot encoding
+
+
 # Ridge Regression:
 
 model = Ridge()
@@ -24,7 +41,7 @@ grid['alpha'] = np.arange(0, 1, 0.01)
 # define search
 search = GridSearchCV(model, grid, scoring='neg_mean_absolute_error', cv=cv, n_jobs=-1)
 # perform the search
-results = search.fit(X, y)
+results = search.fit(x, y)
 # summarize
 print('MAE: %.3f' % results.best_score_)
 print('Config: %s' % results.best_params_)
