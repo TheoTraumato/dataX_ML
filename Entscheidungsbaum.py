@@ -9,14 +9,10 @@ from sklearn.metrics import f1_score, mean_squared_error
 import matplotlib.pyplot as plt
 from sklearn.tree import plot_tree
 
-df = pd.read_csv('https://myshare.leuphana.de/?t=090c5cd1974822513d586a4cca3eaa33', sep=';')
-print(f"{100*round(len(df[df.Survived==1])/len(df), 2)}% of the passengers survived")
-y = df['Survived']
-x = df.drop(['Survived'], axis=1)
-x = x.drop('Unnamed: 0', axis=1)
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=99)
+from data_prep import Data_Preperation
 
-df.head()
+data_prep = Data_Preperation()
+x_train, x_test, y_train, y_test = data_prep.run(use_one_hot_encoding=True)
 
 tree = DecisionTreeClassifier(criterion='entropy', random_state=10)
 tree.fit(x_train, y_train)
@@ -39,7 +35,7 @@ print(f"F1-Score: {f1_score(labels, y_test)}")
 
 
 plt.figure(dpi=200)
-plot_tree(tree, feature_names=x.columns)
+plot_tree(tree, feature_names=x_train.columns)
 plt.show()
 
 forest = RandomForestClassifier(random_state=1)
