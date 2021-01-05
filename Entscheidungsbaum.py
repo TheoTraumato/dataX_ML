@@ -11,6 +11,8 @@ from sklearn.tree import plot_tree
 
 from data_prep import Data_Preperation
 
+#TODO Kommentare zu dem Entscheidungsbaum Hinzufügen.
+
 data_prep = Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run(use_one_hot_encoding=True)
 
@@ -37,6 +39,9 @@ print(f"F1-Score: {f1_score(labels, y_test)}")
 plt.figure(dpi=200)
 plot_tree(tree, feature_names=x_train.columns)
 plt.show()
+
+
+#Wald
 
 forest = RandomForestClassifier(random_state=1)
 params = {'n_estimators': range(10, 101, 10), 'criterion': ['entropy'], 'max_depth': [None], 'max_features': [0.6, 0.75, 0.8], 'max_samples': [0.5, 0.632, 0.75]}
