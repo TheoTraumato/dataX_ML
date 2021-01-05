@@ -6,6 +6,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.linear_model import Lasso, Ridge, LinearRegression
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.model_selection import GridSearchCV
+import matplotlib.pyplot as plt
 
 # Daten erstellen mit One Hot Encoding:
 from data_prep import Data_Preperation
@@ -28,21 +29,41 @@ x = df.drop('class', axis=1)
 y = y.replace({'p': 1, 'e': 0})
 
 #One hot encoding
-dummy_list = x.columns.values
-x = pd.get_dummies(x, columns=dummy_list, drop_first=True)
+#dummy_list = x.columns.values
+#x = pd.get_dummies(x, columns=dummy_list, drop_first=True)
 
 # Ridge Regression:
 
-model = Ridge()
-# define model evaluation method
-cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
-# define grid
-grid = dict()
-grid['alpha'] = np.arange(0, 1, 0.01)
-# define search
-search = GridSearchCV(model, grid, scoring='neg_mean_absolute_error', cv=cv, n_jobs=-1)
-# perform the search
-results = search.fit(x, y)
-# summarize
-print('MAE: %.3f' % results.best_score_)
-print('Config: %s' % results.best_params_)
+lambdas = np.logspace(-6, 6, 100)
+ridge = (Ridge(max_iter=5000000))
+
+parameters = {"alpha" : np.logspace(-6, 6, 50)}
+clf = GridSearchCV(ridge, parameters, cv=5)
+clf.fit(x_train, y_train)
+print(clf.best_params_)
+
+best_alpha = clf.best_params_["alpha"]
+ridge = Ridge(alpha=best_alpha, max_iter=5000000)
+ridge.fit(x_train, y_train)
+y_pred = ridge.predict(x_test)
+print("MSE=", mean_squared_error(y_pred, y_test))
+
+errors = []
+
+for l in lambdas:
+  ridge.set_params(alpha=l)
+  ridge.fit(x_train, y_train)
+  errors.append(mean_squared_error(ridge.predict(x_test), y_test))
+
+plt.figure(figsize=(10,6))
+ax = plt.gca()
+ax.plot(lambdas, errors)
+ax.set_xscale("log")
+plt.xlabel("$\lambda$")
+plt.ylabel("error")
+plt.show()
+
+"""
+{'alpha': 1e-06}
+MSE= 3.2238923765447616e-14
+"""

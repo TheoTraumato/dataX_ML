@@ -6,6 +6,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.linear_model import Lasso, Ridge, LinearRegression
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.model_selection import GridSearchCV
+import matplotlib.pyplot as plt
 
 #TODO: One Hot Encoding wichtig oder nicht?
 
@@ -17,18 +18,40 @@ x_train, x_test, y_train, y_test = data_prep.run()
 
 # Lasso Regression:
 
-lasso = Lasso(max_iter=1000)
-# create dictionary of hyperparameters that we want optimize
-parameters = {'alpha': np.logspace(-6, 6, 1000)}
-# Searching for good alpha value on training data using 4-fold cross validation
-regr = GridSearchCV(lasso, parameters, cv=4, scoring='neg_mean_squared_error')
-# training on the train data
-regr.fit(x_train, y_train)
+lambdas = np.logspace(-6, 6, 50)
+lasso = Lasso(max_iter=5000000)
 
-# get the alpha value
-best_alpha = regr.best_params_['alpha']
-# retrain model on the whole training data with optimal alpha value
-lasso = Lasso(alpha=best_alpha, max_iter=50000)
+parameters = {"alpha" : np.logspace(-6, 6, 50)}
+clf = GridSearchCV(lasso, parameters, cv=5)
+clf.fit(x_train, y_train)
+print(clf.best_params_)
+
+"""{'alpha': 3.0888435964774785e-06}"""
+
+# Modell mit best_alpha trainieren
+best_alpha = clf.best_params_["alpha"]
+lasso = Lasso(alpha=best_alpha, max_iter=5000000)
 lasso.fit(x_train, y_train)
-# evaluate model on test data
-print(f"Mean Squared error for lambda={best_alpha}: {mean_squared_error(lasso.predict(x_test), y_test)}")
+y_pred = lasso.predict(x_test)
+print("MSE=", mean_squared_error(y_pred, y_test))
+
+# Visualisierung
+errors = []
+
+for l in lambdas:
+  lasso.set_params(alpha=l) #Regulierungsparameter
+  lasso.fit(x_train, y_train)
+  errors.append(mean_squared_error(lasso.predict(x_test), y_test))
+
+plt.figure(figsize=(10,6))
+ax = plt.gca()
+ax.plot(lambdas, errors)
+ax.set_xscale("log")
+plt.xlabel("$\lambda$")
+plt.ylabel("error")
+plt.show()
+
+"""
+{'alpha': 3.0888435964774785e-06}
+MSE= 3.1690233535679233e-06
+"""
