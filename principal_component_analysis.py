@@ -5,6 +5,24 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+def print_loading_points(pca):
+    loadings = pca.components_
+
+    # I've omitted the code to create ind; a list of the indexes of the
+    # loadings ordered by distance from origin.
+
+    plt.scatter(*loadings, alpha=0.3, label="Loadings");
+    #plt.scatter(*loadings[:, ind[:3]], c='r', marker='o',
+                #s=80, linewidths=1, facecolors="none",
+                #edgecolors='r',
+                #label="Contributes most\nto variance");
+
+    plt.title("Loading plot");
+    plt.xlabel("Loadings on PC1");
+    plt.ylabel("Loadings on PC2");
+    plt.grid();
+    plt.legend(loc='lower left');
+
 
 def get_principalComponents(x_train, x_test, n_components):
     """Wendet Principal Component Analysis an und transformiert die Daten entsprechend. Die von den PCs nicht abgedeckte
@@ -21,6 +39,8 @@ def get_principalComponents(x_train, x_test, n_components):
 
     print('Anteil abgedeckte Varianz pro principal Component: ', pca.explained_variance_ratio_)
     print('Nicht abgedeckte Varianz: ', 1 - np.sum(pca.explained_variance_ratio_))
+    print_loading_points(pca)
+    print_loading_points(pca)
     return principalComponents_train, principalComponents_test
 
 
@@ -60,3 +80,5 @@ def __test():
     """ERGEBNIS: Eher ungeeignet für unseren Datensatz, da zu viel Informationen verloren geht. Im ursprünglichen Datensatz
     ist die Varianz sehr gleichmeißig auf alle Features verteilt, weswegen die Principal Components wenig Varianz
     'an sich ziehen können'"""
+
+__test()
