@@ -30,11 +30,14 @@ class Data_Preperation():
         :return: x,y (DataFrame): Unabhängige Variablen, Abhängige Variablen
         """
         # Read data
-        df = pd.read_csv('archive/mushrooms.csv')
+        df = pd.read_csv('archive/WA_Fn-UseC_-Telco-Customer-Churn.csv')
         print(df)
 
         # Data Preperation
+        df = df.drop('customerID', axis=1)
+        print(df.head)
         df.drop_duplicates(inplace=True)
+        print(df.shape)
 
         print('Relative Menge an Missing Values: ', df.isna().sum() / (len(df)) * 100)
 
