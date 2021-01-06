@@ -19,7 +19,8 @@ class Data_Preperation():
         :return: x (DataFrame) unabhängige Variablen, durch OHE in binäre Form umgewandelt.
         """
         # TODO:Prüfen ob boolean Features wie "Bruises" ausgelassen werden sollen - Jonas fragen!
-        dummy_list = x.columns.values
+        dummy_list = ['gender', 'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection'
+                      , 'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract', 'PaymentMethod']
         return pd.get_dummies(x, columns=dummy_list, drop_first=True)
 
 
