@@ -57,7 +57,7 @@ if __name__ == '__main__':
         plt.figure(figsize=(10, 10))
         plt.xlabel('Principal Component - 1')
         plt.ylabel('Principal Component - 2')
-        plt.title("Principal Component Analysis of Mushroom Dateset")
+        plt.title("Principal Component Analysis of Telco Customer Churn")
         targets = [0, 1]
         colors = ['g', 'r']
         for target, color in zip(targets, colors):

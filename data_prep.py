@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn import preprocessing
 
 
 class Data_Preperation():
@@ -71,7 +72,16 @@ class Data_Preperation():
         x, y = self.__prepare_data()
         if use_one_hot_encoding:
             x = self.__one_hot_encoding(x)
-        #print(x.head)
+
+        #Standardisieren
+        #TODO: Prüfen ob Boolean wirklich auch standardisiert werden
+        columns = x.columns
+        index = x.index
+        x_array = preprocessing.StandardScaler().fit_transform(x)
+        x = pd.DataFrame(x_array, columns=columns)
+        x.index = index
+
+        print(x.head)
         #print(x.dtypes)
 
 
