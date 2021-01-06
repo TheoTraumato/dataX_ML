@@ -60,13 +60,14 @@ class Data_Preperation():
 
         return x, y
 
-    def run(self, use_one_hot_encoding=True):
+    def run(self, use_one_hot_encoding=True, standardize_data=True):
         """Liest die Daten und bereitet sie vor, wendet One Hot Encoding an falls gewünscht und trennt die Daten in
         Trainings- und Testdaten
 
 
         Args:
-            use_one_hot_encoding: (Boolean) Soll One Hot Encoding angewandet werden auf dem DataFrame
+            use_one_hot_encoding: (Boolean) Soll One Hot Encoding angewandet werden auf dem DataFrame?
+            standardize_data: (Boolean) Sollen die Daten standardisiert  werden?
         :return: x_train, x_test, y_train, y_test: Trainings- und Testdaten
         """
         x, y = self.__prepare_data()
@@ -75,11 +76,12 @@ class Data_Preperation():
 
         #Standardisieren
         #TODO: Prüfen ob Booleanwerte wirklich auch standardisiert werden
-        columns = x.columns
-        index = x.index
-        x_array = preprocessing.StandardScaler().fit_transform(x)
-        x = pd.DataFrame(x_array, columns=columns)
-        x.index = index
+        if standardize_data:
+            columns = x.columns
+            index = x.index
+            x_array = preprocessing.StandardScaler().fit_transform(x)
+            x = pd.DataFrame(x_array, columns=columns)
+            x.index = index
 
         print(x.head)
         #print(x.dtypes)
