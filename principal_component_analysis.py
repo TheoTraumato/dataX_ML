@@ -5,17 +5,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def print_loading_points(pca):
     loadings = pca.components_
 
-    # I've omitted the code to create ind; a list of the indexes of the
-    # loadings ordered by distance from origin.
-
     plt.scatter(*loadings, alpha=0.3, label="Loadings");
-    #plt.scatter(*loadings[:, ind[:3]], c='r', marker='o',
-                #s=80, linewidths=1, facecolors="none",
-                #edgecolors='r',
-                #label="Contributes most\nto variance");
 
     plt.title("Loading plot");
     plt.xlabel("Loadings on PC1");
@@ -44,11 +38,8 @@ def get_principalComponents(x_train, x_test, n_components):
     return principalComponents_train, principalComponents_test
 
 
-def __test():
-    """Private Testmethode, nur zum Testen von PCA, nicht importieren!
+if __name__ == '__main__':
 
-
-    """
     data_prep = Data_Preperation()
     x_train, x_test, y_train, y_test = data_prep.run()
 
@@ -80,5 +71,3 @@ def __test():
     """ERGEBNIS: Eher ungeeignet für unseren Datensatz, da zu viel Informationen verloren geht. Im ursprünglichen Datensatz
     ist die Varianz sehr gleichmeißig auf alle Features verteilt, weswegen die Principal Components wenig Varianz
     'an sich ziehen können'"""
-
-__test()
