@@ -36,9 +36,14 @@ class Data_Preperation():
 
         # Data Preperation
         df = df.drop('customerID', axis=1)
-        print(df.head)
         df.drop_duplicates(inplace=True)
         print(df.shape)
+
+        boolean_values = ['Partner', 'Dependents', 'PhoneService', 'PaperlessBilling', 'Churn' ]
+        for column in boolean_values:
+            df[column] = df[column].replace({'Yes': 1, 'No': 0})
+        print(df.head)
+        print(df.dtypes)
 
         print('Relative Menge an Missing Values: ', df.isna().sum() / (len(df)) * 100)
 
