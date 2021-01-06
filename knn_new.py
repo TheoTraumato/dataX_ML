@@ -54,6 +54,6 @@ print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
 """
-1-Nearest Neighboirs achieved a score of 0.9367484780854021
+K-Nearest Neighboirs achieved a score of 0.9367484780854021
 MSE= 0.07040866568193008
 """
