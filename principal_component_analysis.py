@@ -6,6 +6,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+def print_loading_points(pca):
+    loadings = pca.components_
+
+    plt.scatter(*loadings, alpha=0.3, label="Loadings");
+
+    plt.title("Loading plot");
+    plt.xlabel("Loadings on PC1");
+    plt.ylabel("Loadings on PC2");
+    plt.grid();
+    plt.legend(loc='lower left');
+
+
 def get_principalComponents(x_train, x_test, n_components):
     """Wendet Principal Component Analysis an und transformiert die Daten entsprechend. Die von den PCs nicht abgedeckte
     Varianz sollte möglichst klein sein.
@@ -21,14 +33,13 @@ def get_principalComponents(x_train, x_test, n_components):
 
     print('Anteil abgedeckte Varianz pro principal Component: ', pca.explained_variance_ratio_)
     print('Nicht abgedeckte Varianz: ', 1 - np.sum(pca.explained_variance_ratio_))
+    print_loading_points(pca)
+    print_loading_points(pca)
     return principalComponents_train, principalComponents_test
 
 
-def __test():
-    """Private Testmethode, nur zum Testen von PCA, nicht importieren!
+if __name__ == '__main__':
 
-
-    """
     data_prep = Data_Preperation()
     x_train, x_test, y_train, y_test = data_prep.run()
 
