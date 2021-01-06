@@ -33,8 +33,7 @@ def get_principalComponents(x_train, x_test, n_components):
 
     print('Anteil abgedeckte Varianz pro principal Component: ', pca.explained_variance_ratio_)
     print('Nicht abgedeckte Varianz: ', 1 - np.sum(pca.explained_variance_ratio_))
-    print_loading_points(pca)
-    print_loading_points(pca)
+    #print_loading_points(pca)
     return principalComponents_train, principalComponents_test
 
 
@@ -43,7 +42,7 @@ if __name__ == '__main__':
     data_prep = Data_Preperation()
     x_train, x_test, y_train, y_test = data_prep.run()
 
-    pca_train, pca_test = get_principalComponents(x_train, x_test, 2)
+    pca_train, pca_test = get_principalComponents(x_train, x_test, 5)
 
     pca_train_df = pd.DataFrame(data=pca_train, columns=['principal component ' + str(col_number + 1)
                                                          for col_number in range(len(pca_train[1]))])

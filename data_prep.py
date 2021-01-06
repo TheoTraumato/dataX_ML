@@ -74,7 +74,7 @@ class Data_Preperation():
             x = self.__one_hot_encoding(x)
 
         #Standardisieren
-        #TODO: Prüfen ob Boolean wirklich auch standardisiert werden
+        #TODO: Prüfen ob Booleanwerte wirklich auch standardisiert werden
         columns = x.columns
         index = x.index
         x_array = preprocessing.StandardScaler().fit_transform(x)
