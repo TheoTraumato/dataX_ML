@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split, cross_validate
-from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error, log_loss
 from sklearn.linear_model import Lasso, Ridge, LinearRegression
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.model_selection import GridSearchCV
@@ -16,9 +16,6 @@ data_prep = Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run()
 
 # TODO: Features elimination, da KNN ungenau wird, je größer die Dimension
-
-# PCA:
-x_train, x_test = get_principalComponents(x_train, x_test, 2)
 
 # KNN
 """
@@ -52,7 +49,7 @@ plt.show()
 knn = KNeighborsClassifier(n_neighbors=8)
 knn.fit(x_train, y_train)
 y_pred = knn.predict(x_test)
-print("MSE=", mean_squared_error(y_pred, y_test))
+print("Cross-Entropy = ", log_loss(y_pred, y_test))
 
 #confusion matrix
 from sklearn.metrics import classification_report, confusion_matrix
