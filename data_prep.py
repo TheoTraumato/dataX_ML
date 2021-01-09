@@ -33,14 +33,14 @@ class Data_Preperation():
         """
         # Daten in DateFrame-Objekt lesen
         df = pd.read_csv('archive/WA_Fn-UseC_-Telco-Customer-Churn.csv')
-        print(df)
+        #print(df)
 
         # CustomerID brauchen wir nicht, wird deswegen entfernt
         df = df.drop('customerID', axis=1)
 
         # Duplikate werden entfernt
         df.drop_duplicates(inplace=True)
-        print(df.shape)
+        #print(df.shape)
 
         # Alle Features die 'Yes' and 'No' als Ausprägungen haben werden umgewandelt
         boolean_values = ['Partner', 'Dependents', 'PhoneService', 'PaperlessBilling', 'Churn' ]
@@ -52,7 +52,7 @@ class Data_Preperation():
         df['TotalCharges'] = df['TotalCharges'].astype(float)
 
         # Alle Features werden auf NaN-Werte überprüft (es sind keine vorhanden)
-        print('Relative Menge an Missing Values: ', df.isna().sum() / (len(df)) * 100)
+        #print('Relative Menge an Missing Values: ', df.isna().sum() / (len(df)) * 100)
 
         # Abhängige wird von den unabhängigen Variablen gelöst
         y = df['Churn']
@@ -83,7 +83,7 @@ class Data_Preperation():
             x = pd.DataFrame(x_array, columns=columns)
             x.index = index
 
-        print(x.head)
+        #print(x.head)
         #print(x.dtypes)
 
 

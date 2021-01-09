@@ -16,14 +16,17 @@ from data_prep import Data_Preperation
 data_prep = Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run()
 
-# Logistic:_Regression_Lasso
+#print(x_train.head)
 
-logistic_lasso = LogisticRegression(
-    max_iter=5000000,
-    penalty='l1',
-    solver='saga',
-    C= 0.1)
+def bla(x):
+    test = []
+    for i in x_train.to_string():
+        if type(i) != int:
+            test.append(i)
+    return test
 
-logistic_lasso.fit(x_train, y_train)
-y_pred_lasso = logistic_lasso.predict(x_test)
-print("Cross-Entropy = ", log_loss(y_pred_lasso, y_test))
+def colm(x):
+    for col in x.columns:
+        print(col)
+
+print(x_train.to_string())
