@@ -35,8 +35,8 @@ class Data_Preperation():
         df = pd.read_csv('archive/WA_Fn-UseC_-Telco-Customer-Churn.csv')
         print(df)
 
-        # CustomerID brauchen wir nicht, wird deswegen entfernt
-        df = df.drop('customerID', axis=1)
+        # CustomerID, Tenure und MonthlyCharges brauchen wir nicht, wird deswegen entfernt
+        df = df.drop(['customerID', 'tenure', 'MonthlyCharges'], axis=1)
 
 
 
