@@ -38,14 +38,20 @@ class Data_Preperation():
         # CustomerID brauchen wir nicht, wird deswegen entfernt
         df = df.drop('customerID', axis=1)
 
+
+
         # Duplikate werden entfernt
         df.drop_duplicates(inplace=True)
         print(df.shape)
+
+        print(df.value_counts(["Churn"]))
 
         # Alle Features die 'Yes' and 'No' als Ausprägungen haben werden umgewandelt
         boolean_values = ['Partner', 'Dependents', 'PhoneService', 'PaperlessBilling', 'Churn' ]
         for column in boolean_values:
             df[column] = df[column].replace({'Yes': 1, 'No': 0})
+
+
 
         # Im Feature 'TotalCharges' sind die Werte als string gespeichert, werden hier umgewandelt
         df['TotalCharges'] = df['TotalCharges'].replace({" ":'0'})
