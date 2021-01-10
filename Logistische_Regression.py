@@ -3,11 +3,12 @@ import pandas as pd
 import sklearn
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.model_selection import train_test_split, cross_validate
-from sklearn.metrics import mean_squared_error, mean_absolute_error, log_loss
+from sklearn.metrics import mean_squared_error, mean_absolute_error, log_loss, confusion_matrix
 from sklearn.linear_model import Lasso, Ridge, LinearRegression
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
+from Confusion_Matrix import plot_confusion_matrix
 
 #TODO: One Hot Encoding wichtig oder nicht?
 
@@ -16,6 +17,30 @@ from data_prep import Data_Preperation
 
 data_prep = Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run()
+
+
+# logistic_regression:
+
+logreg = LogisticRegression(C=0.01,solver = 'liblinear')
+logreg.fit(x_train, y_train)
+score = logreg.score(x_test, y_test)
+print("Model Score for logreg: ", score)
+
+# Evaluation logreg mit Cross-Entropy:
+y_pred_logreg = logreg.predict(x_test)
+print("Cross-Entropy for y_pred_logreg = ", log_loss(y_pred_logreg, y_test))
+print("f1_score for y_pred_logreg", sklearn.metrics.f1_score(y_test, y_pred_logreg))
+logreg_matrix = confusion_matrix(y_test, y_pred_logreg)
+plot_confusion_matrix(logreg_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix')
+
+"""
+Ergebnis for logreg:
+Model Score for logreg:  0.7801822323462415
+Cross-Entropy for y_pred_logreg =  7.592342821547129
+f1_score for y_pred_logreg 0.579520697167756
+[[1104  153]
+ [ 233  266]]
+"""
 
 #lasso_cv_paramter:
 lambdas = np.logspace(-6, 6, 50)
@@ -42,6 +67,9 @@ print("Model Score for lasso: ", score)
 y_pred_lasso = logistic_lasso.predict(x_test)
 print("Cross-Entropy for y_pred_lasso = ", log_loss(y_pred_lasso, y_test))
 print("f1_score for y_pred_lasso", sklearn.metrics.f1_score(y_test, y_pred_lasso))
+print(confusion_matrix(y_test, y_pred_lasso))
+lasso_matrix = confusion_matrix(y_test, y_pred_lasso)
+plot_confusion_matrix(lasso_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix')
 
 """
 Ergebnis für lasso:
@@ -49,6 +77,8 @@ best alpha for lasso:  {'alpha': 0.000868511373751352}
 Model Score for lasso:  0.7881548974943052
 Cross-Entropy for y_pred_lasso =  7.316975356671823
 f1_score for y_pred_lasso 0.5912087912087912
+[[1115  142]
+ [ 230  269]]
 """
 
 # Ridge_cv_parameter:
@@ -76,6 +106,9 @@ print("Model Score for ridge: ", score)
 y_pred_ridge = logistic_ridge.predict(x_test)
 print("Cross-Entropy for y_pred_ridge = ", log_loss(y_pred_ridge, y_test))
 print("f1_score for y_pred_ridge", sklearn.metrics.f1_score(y_test, y_pred_ridge))
+print(confusion_matrix(y_test, y_pred_ridge))
+ridge_matrix = confusion_matrix(y_test, y_pred_ridge)
+plot_confusion_matrix(ridge_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix')
 
 """
 Ergebnis für ridge:
@@ -83,4 +116,6 @@ Best alpha for ridge:  {'alpha': 68.66488450042998}
 Model Score for ridge:  0.780751708428246
 Cross-Entropy for y_pred_ridge =  7.572692028552994
 f1_score for y_pred_ridge 0.5400238948626046
+[[1145  112]
+ [ 273  226]]
 """

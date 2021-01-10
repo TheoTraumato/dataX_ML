@@ -29,4 +29,11 @@ def colm(x):
     for col in x.columns:
         print(col)
 
-print(x_train.to_string())
+
+def print_unique_col_values(df):
+    for column in df:
+        if df[column].dtypes == 'object':
+            print(f'{column}:{df[column].unique()}')
+
+
+print_unique_col_values(x_train)

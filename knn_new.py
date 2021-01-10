@@ -59,11 +59,15 @@ y_pred = knn.predict(x_test)
 
 #confusion matrix
 from sklearn.metrics import classification_report, confusion_matrix
+from Confusion_Matrix import plot_confusion_matrix
 print(classification_report(y_test, y_pred))
 print(confusion_matrix(y_test, y_pred))
 print("f1_score for y_pred", sklearn.metrics.f1_score(y_test, y_pred))
 print("Cross-Entropy für y_pred= ", log_loss(y_pred, y_test))
 print("Best_k = ", best_k)
+knn_matrix = confusion_matrix(y_test, y_pred)
+plot_confusion_matrix(knn_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix')
+
 
 """
 Output ohne PCA:
