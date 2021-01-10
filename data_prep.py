@@ -44,7 +44,10 @@ class Data_Preperation():
         df.drop_duplicates(inplace=True)
         print(df.shape)
 
-        print(df.value_counts(["Churn"]))
+        churn_val_count = df.value_counts(["Churn"])
+        print(churn_val_count)
+        print('No: ', round(churn_val_count[0]/churn_val_count.sum()*100, 2), ' %')
+        print('Yes: ', round(churn_val_count[1]/churn_val_count.sum()*100, 2), ' %')
 
         # Alle Features die 'Yes' and 'No' als Ausprägungen haben werden umgewandelt
         boolean_values = ['Partner', 'Dependents', 'PhoneService', 'PaperlessBilling', 'Churn' ]
