@@ -44,6 +44,8 @@ class Data_Preperation():
         df.drop_duplicates(inplace=True)
         print(df.shape)
 
+        #Hier wird gezeigt, dass unser Dataset imbalanced ist
+        #TODO: Under or Oversampling
         churn_val_count = df.value_counts(["Churn"])
         print(churn_val_count)
         print('No: ', round(churn_val_count[0]/churn_val_count.sum()*100, 2), ' %')
@@ -59,6 +61,10 @@ class Data_Preperation():
         # Im Feature 'TotalCharges' sind die Werte als string gespeichert, werden hier umgewandelt
         df['TotalCharges'] = df['TotalCharges'].replace({" ":'0'})
         df['TotalCharges'] = df['TotalCharges'].astype(float)
+
+        #Zeilen mit TotalCharge == 0 sind unnötig (Das waren nie richtige Kunden)
+        df = df.drop(df[df['TotalCharges'] == 0].index)
+        print(df.shape)
 
         # Alle Features werden auf NaN-Werte überprüft (es sind keine vorhanden)
         print('Relative Menge an Missing Values: ', df.isna().sum() / (len(df)) * 100)
@@ -92,7 +98,7 @@ class Data_Preperation():
             x = pd.DataFrame(x_array, columns=columns)
             x.index = index
 
-        print(x.head)
+        #print(x.head)
         #print(x.dtypes)
 
 
