@@ -30,15 +30,13 @@ Mittels Cross Validation und anhand des F1 Scores wird das optimale k bestimmt
 
 # CV für Ermittlung des optimalen k
 params = {"n_neighbors": range(1,100)}
-LogLoss = make_scorer(log_loss, greater_is_better=False, needs_proba=True)
 knn = KNeighborsClassifier()
-clf = GridSearchCV(knn, params, scoring=LogLoss, cv=10)
+clf = GridSearchCV(knn, params, scoring="f1", cv=10)
 clf.fit(x_train, y_train)
 
+# Evaluation Modell anhand dr Trainingsdaten:
 best_k = clf.best_params_["n_neighbors"]
 print(f"{best_k}-Nearest Neighbors achieved a score of {clf.best_score_}")
-score = clf.score(x_test, y_test)
-print("Model score: ", score)
 
 # KNN mit bestmöglichen K
 """
@@ -55,26 +53,39 @@ knn = KNeighborsClassifier(n_neighbors=best_k)
 knn.fit(x_train, y_train)
 y_pred = knn.predict(x_test)
 
-
-
 #confusion matrix
 from sklearn.metrics import classification_report, confusion_matrix
-from Confusion_Matrix import plot_confusion_matrix
-print(classification_report(y_test, y_pred))
-print(confusion_matrix(y_test, y_pred))
+score = knn.score(x_test, y_test)
+print("Model Score for knn: ", score)
 print("f1_score for y_pred", sklearn.metrics.f1_score(y_test, y_pred))
 print("Cross-Entropy für y_pred= ", log_loss(y_pred, y_test))
-print("Best_k = ", best_k)
+print("Best_k used = ", best_k)
+print(classification_report(y_test, y_pred))
+
+# confusion matrix:
+from Confusion_Matrix import plot_confusion_matrix
 knn_matrix = confusion_matrix(y_test, y_pred)
 plot_confusion_matrix(knn_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix')
 
+"""
+Trainings-Datensatz:
+69-Nearest Neighbors achieved a score of 0.5737850753235719
 
-"""
-Output ohne PCA:
-Model score:  -0.4608910175113216
-[[1087  170]
- [ 234  265]]
-f1_score for y_pred 0.5674518201284796
-Cross-Entropy für y_pred=  7.946385403953634
-Best_k =  95
-"""
+Test-Datensatz:
+Model Score for knn:  0.7763833428408443
+f1_score for y_pred 0.5811965811965812
+Cross-Entropy für y_pred=  7.723546524721654
+Best_k used =  69
+              precision    recall  f1-score   support
+
+           0       0.83      0.86      0.85      1260
+           1       0.61      0.55      0.58       493
+
+    accuracy                           0.78      1753
+   macro avg       0.72      0.71      0.71      1753
+weighted avg       0.77      0.78      0.77      1753
+
+Confusion matrix, without normalization
+[[1089  171]
+ [ 221  272]]
+ """

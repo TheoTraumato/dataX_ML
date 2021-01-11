@@ -3,12 +3,13 @@ import pandas as pd
 import sklearn
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.model_selection import train_test_split, cross_validate
-from sklearn.metrics import mean_squared_error, mean_absolute_error, log_loss, confusion_matrix
+from sklearn.metrics import mean_squared_error, mean_absolute_error, log_loss, confusion_matrix, accuracy_score
 from sklearn.linear_model import Lasso, Ridge, LinearRegression
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
 from Confusion_Matrix import plot_confusion_matrix
+from sklearn.metrics import f1_score
 
 #TODO: One Hot Encoding wichtig oder nicht?
 
@@ -19,103 +20,125 @@ data_prep = Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run()
 
 
+"""
+- Methoden: Duplikate hinzufügen von kleineren klasse, parameter class_weight
+"""
+
 # logistic_regression:
+logreg = LogisticRegression(
+    C=0.001,
+    solver = 'liblinear')
 
-logreg = LogisticRegression(C=0.01,solver = 'liblinear')
+# Train model:
 logreg.fit(x_train, y_train)
-score = logreg.score(x_test, y_test)
-print("Model Score for logreg: ", score)
 
-# Evaluation logreg mit Cross-Entropy:
+#measuring model performance:((WIE EVALUIERE ICH MODEL ANHAND TRAININGSDATEN?))
+score = logreg.score(x_train, y_train)
+print("Train-Score for logreg: ", score)
+
+# predict using x_test:
 y_pred_logreg = logreg.predict(x_test)
-print("Cross-Entropy for y_pred_logreg = ", log_loss(y_pred_logreg, y_test))
-print("f1_score for y_pred_logreg", sklearn.metrics.f1_score(y_test, y_pred_logreg))
+
+# Evaluation Log Reg:
+print("Test-Score for logreg: ", accuracy_score(y_test, y_pred_logreg))
+print("Cross-Entropy for y_pred_logreg: ", log_loss(y_pred_logreg, y_test))
+print("F1-score for y_pred_logreg: ", sklearn.metrics.f1_score(y_test, y_pred_logreg))
 logreg_matrix = confusion_matrix(y_test, y_pred_logreg)
 plot_confusion_matrix(logreg_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix')
 
 """
-Ergebnis for logreg:
-Model Score for logreg:  0.7801822323462415
-Cross-Entropy for y_pred_logreg =  7.592342821547129
-f1_score for y_pred_logreg 0.579520697167756
-[[1104  153]
- [ 233  266]]
+Trainings-Datensatz:
+Train-Score for logreg:  0.790144596651446
+
+Test-Datensatz:
+Test-Score for logreg:  0.7877923559612093
+Cross-Entropy for y_pred_logreg:  7.329470821257711
+F1-score for y_pred_logreg:  0.6331360946745561
+Confusion matrix, without normalization
+[[1060  200]
+ [ 172  321]]
 """
 
 #lasso_cv_paramter:
-lambdas = np.logspace(-6, 6, 50)
-lasso = Lasso(max_iter=5000000)
 
-parameters_lasso = {"alpha" : np.logspace(-6, 6, 50)}
-clf_lasso = GridSearchCV(lasso, parameters_lasso, cv=10) #scoring: log-loss?
+log_lass = LogisticRegression(max_iter=5000000, penalty='l1', solver='saga')
+
+# create dictionary of hyperparameters that we want to optimize:
+parameters_lasso = {"C" : np.logspace(-6, 6, 50)}
+
+# Searching for good C value on training data using 10-fold cross validation
+clf_lasso = GridSearchCV(log_lass, parameters_lasso, cv=10)
+
+# training on the train data
 clf_lasso.fit(x_train, y_train)
-print("best alpha for lasso: ", clf_lasso.best_params_)
-best_alpha_lasso = clf_lasso.best_params_["alpha"]
 
-# Logistic:_Regression_Lasso:
-logistic_lasso = LogisticRegression(
-    max_iter=5000000,
-    penalty='l1',
-    solver='saga',
-    C= 1 / best_alpha_lasso)
+# get the alpha value and model score
+print("best alpha for clf_lasso: ", clf_lasso.best_params_)
+print(f"Training-score for clf_lasso:  {clf_lasso.best_score_}")
 
-logistic_lasso.fit(x_train, y_train)
-score = logistic_lasso.score(x_test, y_test)
-print("Model Score for lasso: ", score)
+# predict using x_test:
+y_pred_lasso = clf_lasso.predict(x_test)
 
-# Evaluation Lasso mit Cross-Entropy:
-y_pred_lasso = logistic_lasso.predict(x_test)
-print("Cross-Entropy for y_pred_lasso = ", log_loss(y_pred_lasso, y_test))
-print("f1_score for y_pred_lasso", sklearn.metrics.f1_score(y_test, y_pred_lasso))
-print(confusion_matrix(y_test, y_pred_lasso))
+#Evaluation:
+print("Test-Score for clf_lasso: ", accuracy_score(y_test, y_pred_lasso))
+print("Cross-Entropy for y_pred_lasso: ", log_loss(y_pred_lasso, y_test))
+print("f1_score for y_pred_lasso: ", sklearn.metrics.f1_score(y_test, y_pred_lasso))
 lasso_matrix = confusion_matrix(y_test, y_pred_lasso)
-plot_confusion_matrix(lasso_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix')
+plot_confusion_matrix(lasso_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix lasso')
 
 """
 Ergebnis für lasso:
-best alpha for lasso:  {'alpha': 0.000868511373751352}
-Model Score for lasso:  0.7881548974943052
-Cross-Entropy for y_pred_lasso =  7.316975356671823
-f1_score for y_pred_lasso 0.5912087912087912
-[[1115  142]
- [ 230  269]]
+Trainings-Datensatz:
+best alpha for clf_lasso:  {'C': 0.1389495494373136}
+Training-score for clf_lasso:  0.8011823284446858
+
+Test-Datensatz:
+Test-Score for clf_lasso:  0.7986309184255562
+Cross-Entropy for y_pred_lasso:  6.955145223057688
+f1_score for y_pred_lasso:  0.6011299435028249
+Confusion matrix, without normalization
+[[1134  126]
+ [ 227  266]]
 """
 
 # Ridge_cv_parameter:
-lambdas = np.logspace(-6, 6, 100)
-ridge = (Ridge(max_iter=5000000))
 
-parameters_ridge = {"alpha" : np.logspace(-6, 6, 50)}
-clf_ridge = GridSearchCV(ridge, parameters_ridge, cv=10) #scoring: log-loss?
+log_ridge = LogisticRegression(max_iter=5000000, penalty='l2', solver='saga')
+
+# create dictionary of hyperparameters that we want optimize
+parameters_ridge = {"C" : np.logspace(-6, 6, 50)}
+
+# Searching for good C value on training data using 10-fold cross validation
+clf_ridge = GridSearchCV(log_ridge, parameters_ridge, cv=10)
+
+# training on the train data
 clf_ridge.fit(x_train, y_train)
-print("Best alpha for ridge: ", clf_ridge.best_params_)
-best_alpha_ridge = clf_ridge.best_params_["alpha"]
 
-# Logistic_Regression_Ridge:
-logistic_ridge = LogisticRegression(
-    max_iter=5000000,
-    penalty='l1',
-    solver='saga',
-    C= 1 / best_alpha_ridge)
+# get the alpha value and model score
+print("best alpha for clf_ridge: ", clf_ridge.best_params_)
+print(f"Training-score for clf_ridge:  {clf_ridge.best_score_}")
 
-logistic_ridge.fit(x_train, y_train)
-score = logistic_ridge.score(x_test, y_test)
-print("Model Score for ridge: ", score)
+# predict using x_test:
+y_pred_ridge = clf_ridge.predict(x_test)
 
-# Evaluation ridge mit Cross-Entropy:
-y_pred_ridge = logistic_ridge.predict(x_test)
-print("Cross-Entropy for y_pred_ridge = ", log_loss(y_pred_ridge, y_test))
-print("f1_score for y_pred_ridge", sklearn.metrics.f1_score(y_test, y_pred_ridge))
-print(confusion_matrix(y_test, y_pred_ridge))
+# Evaluation:
+print("Test-Score for clf_ridhe: ", accuracy_score(y_test, y_pred_ridge))
+print("Cross-Entropy for y_pred_ridge: ", log_loss(y_pred_ridge, y_test))
+print("f1_score for y_pred_ridge: ", sklearn.metrics.f1_score(y_test, y_pred_ridge))
 ridge_matrix = confusion_matrix(y_test, y_pred_ridge)
-plot_confusion_matrix(ridge_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix')
+plot_confusion_matrix(ridge_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix ridge')
 
 """
 Ergebnis für ridge:
-Best alpha for ridge:  {'alpha': 68.66488450042998}
-Model Score for ridge:  0.780751708428246
-Cross-Entropy for y_pred_ridge =  7.572692028552994
-f1_score for y_pred_ridge 0.5400238948626046
-[[1145  112]
- [ 273  226]]
+Trainings-Datensatz:
+best alpha for clf_ridge:  {'C': 0.04498432668969444}
+Training-score for clf_ridge:  0.8013720803910918
+
+Test-Datensatz:
+Test-Score for clf_ridge:  0.7992013690815745
+Cross-Entropy for y_pred_ridge:  6.935443011536021
+f1_score for y_pred_ridge:  0.6009070294784581
+Confusion matrix, without normalization
+[[1136  124]
+ [ 228  265]]
 """
