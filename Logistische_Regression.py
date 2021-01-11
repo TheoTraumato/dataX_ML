@@ -11,20 +11,13 @@ import matplotlib.pyplot as plt
 from Confusion_Matrix import plot_confusion_matrix
 from sklearn.metrics import f1_score
 
-#TODO: One Hot Encoding wichtig oder nicht?
-
 # Daten erstellen mit One Hot Encoding:
 from data_prep import Data_Preperation
 
 data_prep = Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run()
 
-
-"""
-- Methoden: Duplikate hinzufügen von kleineren klasse, parameter class_weight
-"""
-
-# logistic_regression:
+# logistic_regression ohne regularisierung:
 logreg = LogisticRegression(
     C=0.001,
     solver = 'liblinear')
@@ -32,7 +25,7 @@ logreg = LogisticRegression(
 # Train model:
 logreg.fit(x_train, y_train)
 
-#measuring model performance:((WIE EVALUIERE ICH MODEL ANHAND TRAININGSDATEN?))
+#measuring model performance:
 score = logreg.score(x_train, y_train)
 print("Train-Score for logreg: ", score)
 
@@ -59,7 +52,7 @@ Confusion matrix, without normalization
  [ 172  321]]
 """
 
-#lasso_cv_paramter:
+#lasso Regularisierung:
 
 log_lass = LogisticRegression(max_iter=5000000, penalty='l1', solver='saga')
 
@@ -101,7 +94,7 @@ Confusion matrix, without normalization
  [ 227  266]]
 """
 
-# Ridge_cv_parameter:
+# Ridge Regularisierung:
 
 log_ridge = LogisticRegression(max_iter=5000000, penalty='l2', solver='saga')
 
