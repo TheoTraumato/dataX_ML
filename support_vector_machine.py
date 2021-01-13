@@ -30,7 +30,7 @@ params_sigmoid = dict(kernel=['sigmoid'], C=[10, 0.1, 0.05, 0.01, ],
 
 
 f1_scorer = metrics.make_scorer(metrics.f1_score)
-grid_search = model_selection.GridSearchCV(estimator=svm.SVC(), param_grid=params_sigmoid, verbose=2,
+grid_search = model_selection.GridSearchCV(estimator=svm.SVC(), param_grid=params_linear, verbose=2,
                                            return_train_score=True, n_jobs=1)
 grid_search.fit(x_train, y_train)
 print('Mean cross-validated score of the best_estimator: ', grid_search.best_score_)
