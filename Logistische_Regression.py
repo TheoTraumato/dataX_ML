@@ -25,26 +25,19 @@ logreg = LogisticRegression(
 # Train model:
 logreg.fit(x_train, y_train)
 
-#measuring model performance:
-score = logreg.score(x_train, y_train)
-print("Train-Score for logreg: ", score)
-
 # predict using x_test:
 y_pred_logreg = logreg.predict(x_test)
 
 # Evaluation Log Reg:
-print("Test-Score for logreg: ", accuracy_score(y_test, y_pred_logreg))
+print("Accuracy for logreg: ", accuracy_score(y_test, y_pred_logreg))
 print("Cross-Entropy for y_pred_logreg: ", log_loss(y_pred_logreg, y_test))
 print("F1-score for y_pred_logreg: ", sklearn.metrics.f1_score(y_test, y_pred_logreg))
 logreg_matrix = confusion_matrix(y_test, y_pred_logreg)
 plot_confusion_matrix(logreg_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix')
 
 """
-Trainings-Datensatz:
-Train-Score for logreg:  0.790144596651446
-
-Test-Datensatz:
-Test-Score for logreg:  0.7877923559612093
+Evaluation:
+Accuracy for logreg:  0.7877923559612093
 Cross-Entropy for y_pred_logreg:  7.329470821257711
 F1-score for y_pred_logreg:  0.6331360946745561
 Confusion matrix, without normalization
@@ -73,20 +66,15 @@ print(f"Training-score for clf_lasso:  {clf_lasso.best_score_}")
 y_pred_lasso = clf_lasso.predict(x_test)
 
 #Evaluation:
-print("Test-Score for clf_lasso: ", accuracy_score(y_test, y_pred_lasso))
+print("Accuracy for clf_lasso: ", accuracy_score(y_test, y_pred_lasso))
 print("Cross-Entropy for y_pred_lasso: ", log_loss(y_pred_lasso, y_test))
 print("f1_score for y_pred_lasso: ", sklearn.metrics.f1_score(y_test, y_pred_lasso))
 lasso_matrix = confusion_matrix(y_test, y_pred_lasso)
 plot_confusion_matrix(lasso_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix lasso')
 
 """
-Ergebnis für lasso:
-Trainings-Datensatz:
-best alpha for clf_lasso:  {'C': 0.1389495494373136}
-Training-score for clf_lasso:  0.8011823284446858
-
-Test-Datensatz:
-Test-Score for clf_lasso:  0.7986309184255562
+Evaluation lasso:
+Accuracy for clf_lasso:  0.7986309184255562
 Cross-Entropy for y_pred_lasso:  6.955145223057688
 f1_score for y_pred_lasso:  0.6011299435028249
 Confusion matrix, without normalization
@@ -107,28 +95,25 @@ clf_ridge = GridSearchCV(log_ridge, parameters_ridge, cv=10)
 # training on the train data
 clf_ridge.fit(x_train, y_train)
 
-# get the alpha value and model score
+# get the alpha value
 print("best alpha for clf_ridge: ", clf_ridge.best_params_)
-print(f"Training-score for clf_ridge:  {clf_ridge.best_score_}")
 
 # predict using x_test:
 y_pred_ridge = clf_ridge.predict(x_test)
 
 # Evaluation:
-print("Test-Score for clf_ridhe: ", accuracy_score(y_test, y_pred_ridge))
+print("Accuracy for clf_ridhe: ", accuracy_score(y_test, y_pred_ridge))
 print("Cross-Entropy for y_pred_ridge: ", log_loss(y_pred_ridge, y_test))
 print("f1_score for y_pred_ridge: ", sklearn.metrics.f1_score(y_test, y_pred_ridge))
 ridge_matrix = confusion_matrix(y_test, y_pred_ridge)
 plot_confusion_matrix(ridge_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix ridge')
 
 """
-Ergebnis für ridge:
-Trainings-Datensatz:
+Alpha value:
 best alpha for clf_ridge:  {'C': 0.04498432668969444}
-Training-score for clf_ridge:  0.8013720803910918
 
-Test-Datensatz:
-Test-Score for clf_ridge:  0.7992013690815745
+Evaluation Ridge:
+Accuracy for clf_ridge:  0.7992013690815745
 Cross-Entropy for y_pred_ridge:  6.935443011536021
 f1_score for y_pred_ridge:  0.6009070294784581
 Confusion matrix, without normalization
