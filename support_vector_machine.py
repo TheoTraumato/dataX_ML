@@ -34,16 +34,16 @@ params_sigmoid = dict(kernel=['sigmoid'], C=[10, 0.1, 0.05, 0.01, ],
 
 
 #f1_scorer = metrics.make_scorer(metrics.f1_score)
-#grid_search = model_selection.GridSearchCV(estimator=svm.SVC(), param_grid=params_linear, verbose=2,
- #                                          return_train_score=True, n_jobs=1)
-#grid_search.fit(x_train, y_train)
-#print('Mean cross-validated score of the best_estimator: ', grid_search.best_score_)
-#print('Best Estimator: ' , grid_search.best_estimator_)
-#print(grid_search.best_params_)
+grid_search = model_selection.GridSearchCV(estimator=svm.SVC(), param_grid=params_linear, verbose=2,
+                                           return_train_score=True, n_jobs=1)
+grid_search.fit(x_train, y_train)
+print('Mean cross-validated score of the best_estimator: ', grid_search.best_score_)
+print('Best Estimator: ' , grid_search.best_estimator_)
+print(grid_search.best_params_)
 
 
-#svm_clf = svm.SVC(**grid_search.best_params_).fit(x_train, y_train)
-svm_clf = svm.SVC(kernel='linear',  C=0.01).fit(x_train, y_train)
+svm_clf = svm.SVC(**grid_search.best_params_).fit(x_train, y_train)
+#svm_clf = svm.SVC(kernel='linear',  C=0.01).fit(x_train, y_train)
 
 val_pred = svm_clf.predict(x_test)
 
