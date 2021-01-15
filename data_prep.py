@@ -33,7 +33,7 @@ class Data_Preperation():
         """
         # Daten in DateFrame-Objekt lesen
         df = pd.read_csv('archive/WA_Fn-UseC_-Telco-Customer-Churn.csv')
-        print(df)
+        #print(df)
 
         # CustomerID, Tenure und MonthlyCharges brauchen wir nicht, wird deswegen entfernt
         df = df.drop(['customerID', 'tenure', 'MonthlyCharges'], axis=1)
@@ -42,7 +42,7 @@ class Data_Preperation():
 
         # Duplikate werden entfernt
         df.drop_duplicates(inplace=True)
-        print(df.shape)
+        #print(df.shape)
 
         #Hier wird gezeigt, dass unser Dataset imbalanced ist
         #TODO: Under or Oversampling
@@ -67,7 +67,7 @@ class Data_Preperation():
         print(df.shape)
 
         # Alle Features werden auf NaN-Werte überprüft (es sind keine vorhanden)
-        print('Relative Menge an Missing Values: ', df.isna().sum() / (len(df)) * 100)
+        #print('Relative Menge an Missing Values: ', df.isna().sum() / (len(df)) * 100)
 
         # Abhängige wird von den unabhängigen Variablen gelöst
         y = df['Churn']
