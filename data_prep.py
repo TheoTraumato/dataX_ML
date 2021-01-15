@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
+from imblearn.over_sampling import SMOTE
 
 
 class Data_Preperation():
@@ -44,12 +45,8 @@ class Data_Preperation():
         df.drop_duplicates(inplace=True)
         #print(df.shape)
 
-        #Hier wird gezeigt, dass unser Dataset imbalanced ist
-        #TODO: Under or Oversampling
-        churn_val_count = df.value_counts(["Churn"])
-        print(churn_val_count)
-        print('No: ', round(churn_val_count[0]/churn_val_count.sum()*100, 2), ' %')
-        print('Yes: ', round(churn_val_count[1]/churn_val_count.sum()*100, 2), ' %')
+
+
 
         # Alle Features die 'Yes' and 'No' als Ausprägungen haben werden umgewandelt
         boolean_values = ['Partner', 'Dependents', 'PhoneService', 'PaperlessBilling', 'Churn' ]
@@ -75,7 +72,18 @@ class Data_Preperation():
 
         return x, y
 
-    def run(self, use_one_hot_encoding=True, standardize_data=True):
+    def oversampling(self, x,y):
+        # Hier wird gezeigt, dass unser Dataset imbalanced ist
+        churn_val_count = y.value_counts(["Churn"])
+        # print(churn_val_count)
+        print('No: ', round(churn_val_count[0] / churn_val_count.sum() * 100, 2), ' %')
+        print('Yes: ', round(churn_val_count[1] / churn_val_count.sum() * 100, 2), ' %')
+
+        smote = SMOTE(sampling_strategy='auto', k_neighbors=1)
+        x,y = smote.fit_resample(x,y)
+        return x,y
+
+    def run(self, use_one_hot_encoding=True, standardize_data=True, oversampling=True):
         """Liest die Daten und bereitet sie vor, wendet One Hot Encoding an falls gewünscht und trennt die Daten in
         Trainings- und Testdaten
 
@@ -103,5 +111,8 @@ class Data_Preperation():
 
 
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=123)
+
+
+
 
         return x_train, x_test, y_train, y_test
