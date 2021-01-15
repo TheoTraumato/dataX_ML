@@ -73,13 +73,20 @@ class Data_Preperation():
         return x, y
 
     def oversampling(self, x,y):
+        """Oversampelt ein Dataset mithilfe des SMOTE-Algorithmus - Es werden nicht Einträge kopiert,
+        sondern Einträge erstellt, die sehr ähnlich sind, um Overfitting entgegenzuwirken.
+
+        :param x:(DataFrame) Unabhängige Variablen
+        :param y: (Series) Abhängige Variablen
+        :return: x,y: x,y nach Oversampling
+        """
         # Hier wird gezeigt, dass unser Dataset imbalanced ist
         churn_val_count = y.value_counts(["Churn"])
         # print(churn_val_count)
         print('No: ', round(churn_val_count[0] / churn_val_count.sum() * 100, 2), ' %')
         print('Yes: ', round(churn_val_count[1] / churn_val_count.sum() * 100, 2), ' %')
 
-        smote = SMOTE(sampling_strategy='auto', k_neighbors=1)
+        smote = SMOTE(sampling_strategy=0.5, k_neighbors=5)
         x,y = smote.fit_resample(x,y)
 
         churn_val_count = y.value_counts(["Churn"])
@@ -111,11 +118,6 @@ class Data_Preperation():
             x = pd.DataFrame(x_array, columns=columns)
             x.index = index
 
-        #print(x.head)
-        #print(x.dtypes)
-
-
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=123)
-        x_train, y_train = self.oversampling(x_train, y_train)
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=123)
 
         return x_train, x_test, y_train, y_test

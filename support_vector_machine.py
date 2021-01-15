@@ -7,7 +7,8 @@ from principal_component_analysis import get_principalComponents
 
 data_prep = data_prep.Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run()
-x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.25, random_state=123)
+x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=123)
+x_train, y_train = data_prep.oversampling(x_train, y_train)
 #x_train, x_test = get_principalComponents(x_train, x_test, 2)
 
 # kernel: 'linear', 'poly', 'rbf', 'sigmoid'
@@ -44,15 +45,15 @@ params_sigmoid = dict(kernel=['sigmoid'], C=[10, 0.1, 0.05, 0.01, ],
 #svm_clf = svm.SVC(**grid_search.best_params_).fit(x_train, y_train)
 svm_clf = svm.SVC(kernel='linear',  C=0.01).fit(x_train, y_train)
 
-pred = svm_clf.predict(x_test)
+val_pred = svm_clf.predict(x_test)
 
 # confusion matrix
-print(metrics.confusion_matrix(y_test, pred))
+print(metrics.confusion_matrix(y_test, val_pred))
 # accuracy
-print("accuracy:", metrics.accuracy_score(y_test, pred))
+print("accuracy:", metrics.accuracy_score(y_test, val_pred))
 # precision score
-print("precision:", metrics.precision_score(y_test, pred))
+print("precision:", metrics.precision_score(y_test, val_pred))
 # recall score
-print("recall", metrics.recall_score(y_test, pred))
+print("recall", metrics.recall_score(y_test, val_pred))
 # f1 score
-print("F1-Score", metrics.f1_score(y_test, pred))
+print("F1-Score", metrics.f1_score(y_test, val_pred))
