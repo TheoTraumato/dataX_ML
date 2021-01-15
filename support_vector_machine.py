@@ -1,3 +1,5 @@
+from sklearn.model_selection import train_test_split
+
 import data_prep
 from sklearn import svm, metrics, model_selection
 
@@ -5,6 +7,7 @@ from principal_component_analysis import get_principalComponents
 
 data_prep = data_prep.Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run()
+x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.25, random_state=123)
 #x_train, x_test = get_principalComponents(x_train, x_test, 2)
 
 # kernel: 'linear', 'poly', 'rbf', 'sigmoid'

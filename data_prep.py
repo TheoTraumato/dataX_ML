@@ -81,6 +81,11 @@ class Data_Preperation():
 
         smote = SMOTE(sampling_strategy='auto', k_neighbors=1)
         x,y = smote.fit_resample(x,y)
+
+        churn_val_count = y.value_counts(["Churn"])
+        print('Nach Oversampling')
+        print('No: ', round(churn_val_count[0] / churn_val_count.sum() * 100, 2), ' %')
+        print('Yes: ', round(churn_val_count[1] / churn_val_count.sum() * 100, 2), ' %')
         return x,y
 
     def run(self, use_one_hot_encoding=True, standardize_data=True, oversampling=True):
@@ -111,9 +116,6 @@ class Data_Preperation():
 
 
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=123)
-        x_train, y_train = oversampling(x_train, y_train)
-
-
-
+        x_train, y_train = self.oversampling(x_train, y_train)
 
         return x_train, x_test, y_train, y_test
