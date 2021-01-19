@@ -3,6 +3,8 @@ from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 from imblearn.over_sampling import SMOTE
 
+from data_analysis import correlation_matrix
+
 
 class Data_Preperation():
     """
@@ -36,8 +38,8 @@ class Data_Preperation():
         df = pd.read_csv('archive/WA_Fn-UseC_-Telco-Customer-Churn.csv')
         #print(df)
 
-        # CustomerID, Tenure und MonthlyCharges brauchen wir nicht, wird deswegen entfernt
-        df = df.drop(['customerID', 'tenure', 'MonthlyCharges'], axis=1)
+        # CustomerID, tenure und MonthlyCharges brauchen wir nicht, wird deswegen entfernt
+        df = df.drop(['customerID'], axis=1)
 
 
 
@@ -58,6 +60,8 @@ class Data_Preperation():
         # Im Feature 'TotalCharges' sind die Werte als string gespeichert, werden hier umgewandelt
         df['TotalCharges'] = df['TotalCharges'].replace({" ":'0'})
         df['TotalCharges'] = df['TotalCharges'].astype(float)
+
+        correlation_matrix(df)
 
         #Zeilen mit TotalCharge == 0 sind unnötig (Das waren nie richtige Kunden)
         df = df.drop(df[df['TotalCharges'] == 0].index)
