@@ -84,9 +84,14 @@ class Data_Preperation():
                       'MultipleLines_No', 'PhoneService', 'Partner', 'InternetService_DSL', 'InternetService_No',
                       'DeviceProtection_Yes'], axis=1)
 
+        #correlation_matrix(df)
+
+        df = df.drop(['TechSupport_Yes', 'OnlineSecurity_Yes', 'PaymentMethod_Mailed check',
+                      'PaymentMethod_Credit card (automatic)', 'PaymentMethod_Bank transfer (automatic)',
+                      'Contract_One year', 'Contract_Two year' ], axis = 1 )
         correlation_matrix(df)
 
-        #TODO: Wieder verschmelzen zu binären Variablen
+
 
 
         #TODO: Binning von Tenure und Monthly Charges

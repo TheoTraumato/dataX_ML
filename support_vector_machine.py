@@ -9,13 +9,15 @@ data_prep = data_prep.Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run()
 x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=123)
 x_train, y_train = data_prep.oversampling(x_train, y_train)
-#x_train, x_test = get_principalComponents(x_train, x_test, 2)
+#x_train, x_test = get_principalComponents(x_train, x_test, 3)
 
 # kernel: 'linear', 'poly', 'rbf', 'sigmoid'
 params_linear = dict(kernel=[ 'linear'], C=[ 1.0, 0.1, 0.01, 0.001, 0.0001 ],)
 params_poly = dict(kernel=['poly'], C=[ 0.1, 0.05, 0.01, 0.001 ],
                    gamma=['scale', 'auto',  0.5, 0.1, 0.01 ], degree=[2,3,4])
 params_sigmoid = dict(kernel=['sigmoid'], C=[10, 0.1, 0.05, 0.01, ],
+                   gamma=['scale', 'auto', 10, 1.0,0.5, 0.1, 0.01 ])
+params_rbf = dict(kernel=['rbf'], C=[10, 0.1, 0.05, 0.01, ],
                    gamma=['scale', 'auto', 10, 1.0,0.5, 0.1, 0.01 ])
 
 # grid1: {'C': 0.1, 'gamma': 'scale', 'kernel': 'linear'}
@@ -34,7 +36,7 @@ params_sigmoid = dict(kernel=['sigmoid'], C=[10, 0.1, 0.05, 0.01, ],
 
 
 #f1_scorer = metrics.make_scorer(metrics.f1_score)
-'''grid_search = model_selection.GridSearchCV(estimator=svm.SVC(), param_grid=params_linear, verbose=2,
+'''grid_search = model_selection.GridSearchCV(estimator=svm.SVC(), param_grid=params_sigmoid, verbose=2,
                                            return_train_score=True, n_jobs=1)
 grid_search.fit(x_train, y_train)
 print('Mean cross-validated score of the best_estimator: ', grid_search.best_score_)
