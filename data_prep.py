@@ -25,7 +25,7 @@ class Data_Preperation():
         # TODO:Prüfen ob boolean Features wie "Bruises" ausgelassen werden sollen - Jonas fragen!
         dummy_list = ['gender', 'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection'
                       , 'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract', 'PaymentMethod']
-        return pd.get_dummies(x, columns=dummy_list, drop_first=True)
+        return pd.get_dummies(x, columns=dummy_list, drop_first=False)
 
 
     def __prepare_data(self):
@@ -61,10 +61,37 @@ class Data_Preperation():
         df['TotalCharges'] = df['TotalCharges'].replace({" ":'0'})
         df['TotalCharges'] = df['TotalCharges'].astype(float)
 
+        df = self.__one_hot_encoding(df)
+
+        #Correlations Matrix ausdrucken
+        #correlation_matrix(df)
+        print('Corr gender_Female: ', df['gender_Female'].corr(df['Churn']))
+        print('Corr gender_Male: ', df['gender_Male'].corr(df['Churn']))
+
+        #Gender haben beide Ausprägungen so gut wie keine Korrelation zu Churn -->Drop
+        #Die ganzen 'No Internet Service' Ausprägungen sind bereits im Feature Internetservice enthalten-->Drop
+        df = df.drop(['gender_Female', 'gender_Male', 'OnlineSecurity_No internet service',
+                      'OnlineBackup_No internet service', 'DeviceProtection_No internet service',
+                      'TechSupport_No internet service', 'StreamingTV_No internet service',
+                      'StreamingMovies_No internet service', 'MultipleLines_No phone service'], axis=1)
+
+        #correlation_matrix(df)
+
+        #Durch MonthlyCharges und Tenure erhalten wir TotalCharges, überflüssig -->Drop
+        #Die anderen Feats haben sehr geringe Korrelation mit Churn,
+        # dafür teilweise hohe Korrelation mit MonthlyCharges -->Drop
+        df = df.drop(['TotalCharges', 'StreamingMovies_Yes', 'StreamingTV_Yes', 'OnlineBackup_Yes', 'MultipleLines_Yes',
+                      'MultipleLines_No', 'PhoneService', 'Partner', 'InternetService_DSL', 'InternetService_No',
+                      'DeviceProtection_Yes'], axis=1)
+
         correlation_matrix(df)
 
-        #Zeilen mit TotalCharge == 0 sind unnötig (Das waren nie richtige Kunden)
-        df = df.drop(df[df['TotalCharges'] == 0].index)
+        #TODO: Wieder verschmelzen zu binären Variablen
+
+
+        #TODO: Binning von Tenure und Monthly Charges
+
+
         print(df.shape)
 
         # Alle Features werden auf NaN-Werte überprüft (es sind keine vorhanden)
@@ -110,8 +137,8 @@ class Data_Preperation():
         :return: x_train, x_test, y_train, y_test: Trainings- und Testdaten
         """
         x, y = self.__prepare_data()
-        if use_one_hot_encoding:
-            x = self.__one_hot_encoding(x)
+        #if use_one_hot_encoding:
+       #     x = self.__one_hot_encoding(x)
 
         #Standardisieren
         #TODO: Prüfen ob Booleanwerte wirklich auch standardisiert werden
