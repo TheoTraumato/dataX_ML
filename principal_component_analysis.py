@@ -42,7 +42,7 @@ if __name__ == '__main__':
     data_prep = Data_Preperation()
     x_train, x_test, y_train, y_test = data_prep.run()
 
-    pca_train, pca_test = get_principalComponents(x_train, x_test, 5)
+    pca_train, pca_test = get_principalComponents(x_train, x_test, 2)
 
     pca_train_df = pd.DataFrame(data=pca_train, columns=['principal component ' + str(col_number + 1)
                                                          for col_number in range(len(pca_train[1]))])

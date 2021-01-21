@@ -3,7 +3,8 @@ import pandas as pd
 import sklearn
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.model_selection import train_test_split, cross_validate
-from sklearn.metrics import mean_squared_error, mean_absolute_error, log_loss, confusion_matrix, accuracy_score
+from sklearn.metrics import mean_squared_error, mean_absolute_error, log_loss, confusion_matrix, accuracy_score, \
+    precision_score, recall_score
 from sklearn.linear_model import Lasso, Ridge, LinearRegression
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.model_selection import GridSearchCV
@@ -13,12 +14,13 @@ from sklearn.metrics import f1_score
 
 # Data preparation with One Hot Encoding:
 from data_prep import Data_Preperation
+from principal_component_analysis import get_principalComponents
 
 data_prep = Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run()
 
 # Logistic Regression Basis Model:
-logreg = LogisticRegression()
+logreg = LogisticRegression(penalty = "none")
 
 # Train model:
 logreg.fit(x_train, y_train)
@@ -28,6 +30,8 @@ y_pred = logreg.predict(x_test)
 
 # Evaluation Log Reg:#
 print("Accuracy for basis model: ", accuracy_score(y_test, y_pred))
+print("Precision for basis model: ", precision_score(y_test, y_pred))
+print("Recall for basis model: ", recall_score(y_test, y_pred))
 print("F1-score for basis model: ", sklearn.metrics.f1_score(y_test, y_pred))
 logreg_matrix = confusion_matrix(y_test, y_pred)
 plot_confusion_matrix(logreg_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix basis model')
@@ -35,6 +39,8 @@ plot_confusion_matrix(logreg_matrix, classes=['churn=1','churn=0'],normalize= Fa
 """
 Evaluation basis model:
 Accuracy for basis model:  0.7997718197375927
+Precision for basis model:  0.6766169154228856
+Recall for basis model:  0.5517241379310345
 F1-score for basis model:  0.6078212290502794
 Confusion matrix, without normalization
 [[1130  130]
@@ -58,16 +64,20 @@ y_pred_logreg = clf_logreg.predict(x_test)
 
 # Evaluation Log Reg:#
 print("best params for logreg: ", clf_logreg.best_params_)
-print("Accuracy for y_pred_logreg: ", accuracy_score(y_test, y_pred_logreg))
-print("F1-score for y_pred_logreg: ", sklearn.metrics.f1_score(y_test, y_pred_logreg))
+print("Accuracy for logreg: ", accuracy_score(y_test, y_pred_logreg))
+print("Precision for logreg: ", precision_score(y_test, y_pred_logreg))
+print("Recall for logreg: ", recall_score(y_test, y_pred_logreg))
+print("F1-score for logreg: ", sklearn.metrics.f1_score(y_test, y_pred_logreg))
 logreg_matrix = confusion_matrix(y_test, y_pred_logreg)
 plot_confusion_matrix(logreg_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix logreg optimized')
 
 """
 Evaluation:
 best params for logreg:  {'C': 0.244205309454865, 'penalty': 'l1', 'solver': 'liblinear'}
-Accuracy for y_pred_logreg:  0.8009127210496292
-F1-score for y_pred_logreg:  0.607424071991001
+Accuracy for logreg:  0.8009127210496292
+Precision for logreg:  0.6818181818181818
+Recall for logreg:  0.5476673427991886
+F1-score for logreg:  0.607424071991001
 Confusion matrix, without normalization
 [[1134  126]
  [ 223  270]]
