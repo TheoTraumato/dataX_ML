@@ -6,8 +6,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def print_loading_points(pca):
+def print_loading_points(pca, x_train):
     loadings = pca.components_
+
+    plt.figure(figsize=(15, 15))
 
     plt.scatter(*loadings, alpha=0.3, label="Loadings");
 
@@ -16,6 +18,8 @@ def print_loading_points(pca):
     plt.ylabel("Loadings on PC2");
     plt.grid();
     plt.legend(loc='lower left');
+    for i, label in enumerate(x_train.columns):
+        plt.annotate(label, (loadings[0][i], loadings[1][i]))
 
 
 def get_principalComponents(x_train, x_test, n_components):
@@ -33,14 +37,14 @@ def get_principalComponents(x_train, x_test, n_components):
 
     print('Anteil abgedeckte Varianz pro principal Component: ', pca.explained_variance_ratio_)
     print('Nicht abgedeckte Varianz: ', 1 - np.sum(pca.explained_variance_ratio_))
-    #print_loading_points(pca)
+    print_loading_points(pca, x_train)
     return principalComponents_train, principalComponents_test
 
 
 if __name__ == '__main__':
 
     data_prep = Data_Preperation()
-    x_train, x_test, y_train, y_test = data_prep.run()
+    x_train, x_test, y_train, y_test = data_prep.run(oversampling=False)
 
     pca_train, pca_test = get_principalComponents(x_train, x_test, 2)
 
