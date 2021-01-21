@@ -13,11 +13,11 @@ from Confusion_Matrix import plot_confusion_matrix
 from sklearn.metrics import f1_score
 
 # Data preparation with One Hot Encoding:
-from data_prep import Data_Preperation
+import data_prep
 from principal_component_analysis import get_principalComponents
 
-data_prep = Data_Preperation()
-x_train, x_test, y_train, y_test = data_prep.run()
+data_prep = data_prep.Data_Preperation()
+x_train, x_test, y_train, y_test = data_prep.run(oversampling=True)
 
 # Logistic Regression Basis Model:
 logreg = LogisticRegression(penalty = "none")
