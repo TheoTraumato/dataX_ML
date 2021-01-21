@@ -21,3 +21,11 @@ def correlation_matrix(df):
 
     # displaying heatmap
     mp.show()
+
+def distribution(df, feat):
+    plt.figure()
+    sb.distplot(df[df['Churn'] == 0][feat],  color='b', bins=20, label='No Churn')
+    sb.distplot(df[df['Churn'] == 1][feat],  color='r', bins=20, label='Churn')
+    plt.legend()
+    plt.show()
+

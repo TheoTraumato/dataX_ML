@@ -6,7 +6,7 @@ from sklearn import svm, metrics, model_selection
 from principal_component_analysis import get_principalComponents
 
 data_prep = data_prep.Data_Preperation()
-x_train, x_test, y_train, y_test = data_prep.run()
+x_train, x_test, y_train, y_test = data_prep.run(oversampling=False)
 x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=123)
 x_train, y_train = data_prep.oversampling(x_train, y_train)
 #x_train, x_test = get_principalComponents(x_train, x_test, 3)
@@ -26,7 +26,7 @@ params_rbf = dict(kernel=['rbf'], C=[10, 0.1, 0.05, 0.01, ],
 # grid4: {'C': 10, 'gamma': 0.01, 'kernel': 'rbf'}
 # grid5: {'C': 100, 'gamma': 0.001, 'kernel': 'rbf'}
 # grid6: {'C': 500, 'gamma': 0.001, 'kernel': 'rbf'}
-#grid 7: {'C': 500, 'gamma': 0.001, 'kernel': 'rbf'} # accuracy 80,14 precision 70,42, recall 50, f1 58%
+# grid 7: {'C': 500, 'gamma': 0.001, 'kernel': 'rbf'} # accuracy 80,14 precision 70,42, recall 50, f1 58%
 
 #linear kernel:
 #grid 1: {'C': 0.01, 'kernel': 'linear'}

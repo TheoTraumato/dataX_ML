@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 def print_loading_points(pca, x_train):
     loadings = pca.components_
 
+    plt.figure(figsize=(15, 15))
+
     plt.scatter(*loadings, alpha=0.3, label="Loadings");
 
     plt.title("Loading plot");
@@ -42,7 +44,7 @@ def get_principalComponents(x_train, x_test, n_components):
 if __name__ == '__main__':
 
     data_prep = Data_Preperation()
-    x_train, x_test, y_train, y_test = data_prep.run()
+    x_train, x_test, y_train, y_test = data_prep.run(oversampling=False)
 
     pca_train, pca_test = get_principalComponents(x_train, x_test, 2)
 

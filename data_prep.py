@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 from imblearn.over_sampling import SMOTE
 
-from data_analysis import correlation_matrix
+from data_analysis import correlation_matrix, distribution
 
 
 class Data_Preperation():
@@ -91,10 +91,17 @@ class Data_Preperation():
                       'Contract_One year', 'Contract_Two year' ], axis = 1 )
         correlation_matrix(df)
 
+        #distribution(df, 'tenure')
+        #distribution(df, 'MonthlyCharges')
+        df['MonthlyChargesBinned'] = df['MonthlyCharges'].apply(lambda x: 0 if (x < 35) else(1 if x < 70 else 2))
+        df['TenureBinned'] = df['tenure'].apply(lambda x: 0 if x < 20 else 1)
+        #df['short_tenure'] = df['tenure'].apply(lambda x: 1 if x < 20 else 0)
+        #df['high_charges'] = df['MonthlyCharges'].apply(lambda x: 1 if x > 70 and x < 110 else 0)
+
+        df = df.drop(['tenure', 'MonthlyCharges'], axis=1)
+        correlation_matrix(df)
 
 
-
-        #TODO: Binning von Tenure und Monthly Charges
 
 
         print(df.shape)
