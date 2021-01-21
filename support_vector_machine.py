@@ -8,7 +8,7 @@ from principal_component_analysis import get_principalComponents
 data_prep = data_prep.Data_Preperation()
 x_train, x_test, y_train, y_test = data_prep.run(oversampling=False)
 x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=123)
-x_train, y_train = data_prep.oversampling(x_train, y_train)
+
 #x_train, x_test = get_principalComponents(x_train, x_test, 3)
 
 # kernel: 'linear', 'poly', 'rbf', 'sigmoid'

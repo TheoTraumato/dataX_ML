@@ -139,7 +139,7 @@ class Data_Preperation():
         print('Yes: ', round(churn_val_count[1] / churn_val_count.sum() * 100, 2), ' %')
         return x,y
 
-    def run(self, use_one_hot_encoding=True, standardize_data=True, oversampling=True):
+    def run(self,  standardize_data=True, oversampling=True):
         """Liest die Daten und bereitet sie vor, wendet One Hot Encoding an falls gewünscht und trennt die Daten in
         Trainings- und Testdaten
 
@@ -150,8 +150,8 @@ class Data_Preperation():
         :return: x_train, x_test, y_train, y_test: Trainings- und Testdaten
         """
         x, y = self.__prepare_data()
-        #if use_one_hot_encoding:
-       #     x = self.__one_hot_encoding(x)
+
+
 
         #Standardisieren
         #TODO: Prüfen ob Booleanwerte wirklich auch standardisiert werden
@@ -162,6 +162,10 @@ class Data_Preperation():
             x = pd.DataFrame(x_array, columns=columns)
             x.index = index
 
+
+
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=123)
+        if oversampling:
+            x_train, y_train = data_prep.oversampling(x_train, y_train)
 
         return x_train, x_test, y_train, y_test
