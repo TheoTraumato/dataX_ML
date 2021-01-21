@@ -166,6 +166,6 @@ class Data_Preperation():
 
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=123)
         if oversampling:
-            x_train, y_train = data_prep.oversampling(x_train, y_train)
+            x_train, y_train = self.oversampling(x_train, y_train)
 
         return x_train, x_test, y_train, y_test
