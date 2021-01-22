@@ -6,8 +6,8 @@ from sklearn import svm, metrics, model_selection
 from principal_component_analysis import get_principalComponents
 
 data_prep = data_prep.Data_Preperation()
-x_train, x_test, y_train, y_test = data_prep.run(oversampling=False)
-x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=123)
+x_train, x_test, y_train, y_test = data_prep.run(oversampling=True)
+#x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.1, random_state=123)
 
 #x_train, x_test = get_principalComponents(x_train, x_test, 3)
 
@@ -45,7 +45,7 @@ print(grid_search.best_params_)'''
 
 
 #svm_clf = svm.SVC(**grid_search.best_params_).fit(x_train, y_train)
-svm_clf = svm.SVC(kernel='linear',  C=0.01).fit(x_train, y_train)
+svm_clf = svm.SVC(kernel='rbf',  C=0.01).fit(x_train, y_train)
 
 val_pred = svm_clf.predict(x_test)
 

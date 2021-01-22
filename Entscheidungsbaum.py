@@ -65,11 +65,11 @@ print("Recall for basis model: ", recall_score(y_test, y_pred))
 print("F1-score for basis model: ", sklearn.metrics.f1_score(y_test, y_pred))
 
 
-"Wald" Forest gibt es ebenfalls einige Hyperparameter, die optimiert werden sollten:
+"""Wald Forest gibt es ebenfalls einige Hyperparameter, die optimiert werden sollten:
 n_estimators = Default 100, Anzahl der Bäume im Wald
 criterion = Default "gini" | entropy = Messbarkeit der Aufteilung
 max_features = Default None, max tiefe des Waldes
-max_samples = Default 2, min Beispiele zum splitten"""
+max_samples = Default 2, min Beispiele zum splitten
 """
 forest = RandomForestClassifier(random_state=1)
 params = {'n_estimators': range(20, 201, 10), 'criterion': ['entropy'], 'max_depth': [None],
