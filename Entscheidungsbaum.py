@@ -10,7 +10,7 @@ from data_prep import Data_Preperation
 
 
 data_prep = Data_Preperation()
-x_train, x_test, y_train, y_test = data_prep.run(use_one_hot_encoding=True)
+x_train, x_test, y_train, y_test = data_prep.run()
 # x_train,x_test  = get_principalComponents(x_train, x_test , 3) # Baum mit 9 Ebenen
 
 """"Mini"baum - Kein Prepruning"""
