@@ -1,26 +1,12 @@
-import numpy as np
-import pandas as pd
-import sklearn
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split, cross_validate
-from sklearn.metrics import mean_squared_error, mean_absolute_error, log_loss, make_scorer, accuracy_score, \
-    precision_score, recall_score
-from sklearn.linear_model import Lasso, Ridge, LinearRegression
-from sklearn.preprocessing import StandardScaler, PolynomialFeatures
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 
 # Daten erstellen mit One Hot Encoding:
 from data_prep import Data_Preperation
-from principal_component_analysis import get_principalComponents
 
 data_prep = Data_Preperation()
-x_train, x_test, y_train, y_test = data_prep.run()
-
-# TODO: Features elimination, da KNN ungenau wird, je größer die Dimension
-
-#PCA:
-#x_train, x_test = get_principalComponents(x_train, x_test, 2)
+x_train, x_test, y_train, y_test = data_prep.run(standardize_data=True, oversampling=True)
 
 # KNN
 """
@@ -48,26 +34,46 @@ print("Accuracy for knn: ", accuracy_score(y_test, y_pred))
 print("Precision for knn: ", precision_score(y_test, y_pred))
 print("Recall for knn: ", recall_score(y_test, y_pred))
 print("Best_k used = ", best_k)
-print(classification_report(y_test, y_pred))
 
 # confusion matrix:
 from Confusion_Matrix import plot_confusion_matrix
 knn_matrix = confusion_matrix(y_test, y_pred)
-plot_confusion_matrix(knn_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix')
+plot_confusion_matrix(knn_matrix, classes=['churn=0','churn=1'],normalize= False,  title='Confusion matrix')
 
 """
-Accuracy for knn:  0.7792355961209355
-Best_k used =  85
-              precision    recall  f1-score   support
-
-           0       0.83      0.87      0.85      1260
-           1       0.62      0.54      0.58       493
-
-    accuracy                           0.78      1753
-   macro avg       0.73      0.71      0.72      1753
-weighted avg       0.77      0.78      0.77      1753
-
+Evaluation: standardize_data=False, oversampling=False:
+Accuracy for knn:  0.7637010676156584
+Precision for knn:  0.60828025477707
+Recall for knn:  0.4775
+Best_k used =  98
 Confusion matrix, without normalization
-[[1098  162]
- [ 225  268]]
+[[882 123]
+ [209 191]]
+ 
+Evaluation: standardize_data=True, oversampling=False:
+Accuracy for knn:  0.7622775800711744
+Precision for knn:  0.6050955414012739
+Recall for knn:  0.475
+Best_k used =  76
+Confusion matrix, without normalization
+[[881 124]
+ [210 190]] 
+ 
+Evaluation: standardize_data=False, oversampling=True:
+Accuracy for knn:  0.7615658362989324
+Precision for knn:  0.5757575757575758
+Recall for knn:  0.6175
+Best_k used =  81
+Confusion matrix, without normalization
+[[823 182]
+ [153 247]]
+ 
+Evaluation: standardize_data=True, oversampling=True:
+Accuracy for knn:  0.7601423487544484
+Precision for knn:  0.5704697986577181
+Recall for knn:  0.6375
+Best_k used =  89
+Confusion matrix, without normalization
+[[813 192]
+ [145 255]]
  """
