@@ -16,7 +16,7 @@ x_train, x_test, y_train, y_test = data_prep.run()
 """"Mini"baum - Kein Prepruning"""
 
 
-tree = DecisionTreeClassifier(criterion='entropy', random_state=10)
+"""tree = DecisionTreeClassifier(criterion='entropy', random_state=10)
 tree.fit(x_train, y_train)
 labels = tree.predict(x_test)
 #print(f"F1-Score kein Prepruning: {f1_score(labels, y_test)}")
@@ -34,10 +34,10 @@ print("F1-score for basis model: ", sklearn.metrics.f1_score(y_test, y_pred))
 
 
 
-"""Baum mit Prepruning mit folgenden Parametern
+Baum mit Prepruning mit folgenden Parametern
 max_depth = Default None, Max Tiefe
 min_samples_split = Min Beispiele zur Aufteilung einer Node
-min_samples_leaf = Default 1, Min Beispiel Blätter"""
+min_samples_leaf = Default 1, Min Beispiel Blätter
 
 
 tree = DecisionTreeClassifier()
@@ -65,14 +65,14 @@ print("Recall for basis model: ", recall_score(y_test, y_pred))
 print("F1-score for basis model: ", sklearn.metrics.f1_score(y_test, y_pred))
 
 
-"""Wald Forest gibt es ebenfalls einige Hyperparameter, die optimiert werden sollten:
+Wald Forest gibt es ebenfalls einige Hyperparameter, die optimiert werden sollten:
 n_estimators = Default 100, Anzahl der Bäume im Wald
 criterion = Default "gini" | entropy = Messbarkeit der Aufteilung
 max_features = Default None, max tiefe des Waldes
 max_samples = Default 2, min Beispiele zum splitten
 """
 forest = RandomForestClassifier(random_state=1)
-params = {'n_estimators': range(20, 201, 10), 'criterion': ['entropy'], 'max_depth': [None],
+params = {'n_estimators': [150,200,250,300], 'criterion': ['entropy'], 'max_depth': [15,20,25],
           'max_features': [0.6, 0.75, 0.8], 'max_samples': [0.5, 0.632, 0.75]}
 clf = GridSearchCV(forest, params, scoring='f1', cv=5, verbose=2)
 clf.fit(x_train, y_train)
