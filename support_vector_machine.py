@@ -2,6 +2,7 @@ from sklearn.model_selection import train_test_split
 
 import data_prep
 from sklearn import svm, metrics, model_selection
+from Roc_curve import plot_roc_curve
 
 from principal_component_analysis import get_principalComponents
 
@@ -46,9 +47,10 @@ print(grid_search.best_params_)'''
 
 
 #svm_clf = svm.SVC(**grid_search.best_params_).fit(x_train, y_train)
-svm_clf = svm.SVC(kernel='linear',  C=0.01).fit(x_train, y_train)
+svm_clf = svm.SVC(kernel='linear',  C=0.01, probability=True).fit(x_train, y_train)
 
 val_pred = svm_clf.predict(x_test)
+
 
 # confusion matrix
 print(metrics.confusion_matrix(y_test, val_pred))
@@ -60,3 +62,5 @@ print("precision:", metrics.precision_score(y_test, val_pred))
 print("recall", metrics.recall_score(y_test, val_pred))
 # f1 score
 print("F1-Score", metrics.f1_score(y_test, val_pred))
+
+plot_roc_curve(svm_clf, x_test, y_test)
