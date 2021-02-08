@@ -22,6 +22,7 @@ params_rbf = dict(kernel=['rbf'], C=[10, 0.1, 0.05, 0.01, ],
                    gamma=['scale', 'auto', 10, 1.0,0.5, 0.1, 0.01 ])
 
 # grid1: {'C': 0.1, 'gamma': 'scale', 'kernel': 'linear'}
+
 # grid2: {'C': 0.05, 'gamma': 'scale', 'kernel': 'linear'}
 # grid3: (no more f1 scorer for gridsearch): {'C': 1.0, 'gamma': 'scale', 'kernel': 'rbf'}
 # grid4: {'C': 10, 'gamma': 0.01, 'kernel': 'rbf'}
