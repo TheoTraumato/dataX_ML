@@ -24,9 +24,8 @@ class Data_Preperation():
         :return: x (DataFrame) unabhängige Variablen, durch OHE in binäre Form umgewandelt.
         """
         # TODO:Prüfen ob boolean Features wie "Bruises" ausgelassen werden sollen - Jonas fragen!
-        dummy_list = ['gender', 'MultipleLines', 'InternetService', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection'
-                      , 'TechSupport', 'StreamingTV', 'StreamingMovies', 'Contract', 'PaymentMethod']
-        return pd.get_dummies(x, columns=dummy_list, drop_first=False)
+        dummy_list = ['gender', 'MultipleLines', 'InternetService',  'Contract', 'PaymentMethod']
+        return pd.get_dummies(x, columns=dummy_list, drop_first=True)
 
 
     def __prepare_data(self):
@@ -50,10 +49,15 @@ class Data_Preperation():
         #print(df.shape)
 
 
+        no_internet_values = ['OnlineSecurity','OnlineBackup', 'DeviceProtection','TechSupport', 'StreamingTV',
+                            'StreamingMovies']
 
+        for column in no_internet_values:
+            df[column] = df[column].replace({'No internet service': 'No'})
 
         # Alle Features die 'Yes' and 'No' als Ausprägungen haben werden umgewandelt
         boolean_values = ['Partner', 'Dependents', 'PhoneService', 'PaperlessBilling', 'Churn' ]
+        boolean_values.extend(no_internet_values)
         for column in boolean_values:
             df[column] = df[column].replace({'Yes': 1, 'No': 0})
 
@@ -66,15 +70,12 @@ class Data_Preperation():
         #Correlations Matrix ausdrucken
         #correlation_matrix(df)
 
-        print('Corr gender_Female: ', df['gender_Female'].corr(df['Churn']))
+        #print('Corr gender_Female: ', df['gender_Female'].corr(df['Churn']))
         print('Corr gender_Male: ', df['gender_Male'].corr(df['Churn']))
 
         #Gender haben beide Ausprägungen so gut wie keine Korrelation zu Churn -->Drop
         #Die ganzen 'No Internet Service' Ausprägungen sind bereits im Feature Internetservice enthalten-->Drop
-        df = df.drop(['gender_Female', 'gender_Male',  'PhoneService', 'OnlineSecurity_No internet service',
-                      'OnlineBackup_No internet service', 'DeviceProtection_No internet service',
-                      'TechSupport_No internet service', 'StreamingTV_No internet service',
-                      'StreamingMovies_No internet service', 'MultipleLines_No phone service'], axis=1)
+        df = df.drop([ 'gender_Male',  'PhoneService',  'MultipleLines_No phone service'], axis=1)
 
         #df = df.drop(['PhoneService' ])
 
