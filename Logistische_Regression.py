@@ -9,10 +9,10 @@ from Confusion_Matrix import plot_confusion_matrix
 import data_prep
 
 data_prep = data_prep.Data_Preperation()
-x_train, x_test, y_train, y_test = data_prep.run(standardize_data=True, oversampling=False)
+x_train, x_test, y_train, y_test = data_prep.run(standardize_data=True, oversampling=True)
 
 # Logistic Regression Basis Model:
-logreg = LogisticRegression()
+logreg = LogisticRegression(penalty="none")
 
 # Train model:
 logreg.fit(x_train, y_train)

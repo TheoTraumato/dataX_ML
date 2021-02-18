@@ -15,9 +15,18 @@ K ist dabei die Anzahl der nächstgelegenen Punkte zu x.
 Mittels Cross Validation und anhand des F1 Scores wird das optimale k bestimmt
 """
 
+#basis modell:
+# train model:
+knn = KNeighborsClassifier()
+knn.fit(x_train, y_train)
+y_pred_basis = knn.predict(x_test)
+
+print("Accuracy for knn_basis: ", accuracy_score(y_test, y_pred_basis))
+print("Precision for knn_basis: ", precision_score(y_test, y_pred_basis))
+print("Recall for knn_basis: ", recall_score(y_test, y_pred_basis))
+
 # CV für Ermittlung des optimalen k
 params = {"n_neighbors": range(1,100)}
-knn = KNeighborsClassifier()
 clf = GridSearchCV(knn, params, scoring="neg_log_loss", cv=10)
 clf.fit(x_train, y_train)
 best_k = clf.best_params_["n_neighbors"]
