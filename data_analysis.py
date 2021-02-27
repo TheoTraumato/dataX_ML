@@ -29,3 +29,9 @@ def distribution(df, feat):
     plt.legend()
     plt.show()
 
+def bar(df,feat):
+    plt.figure()
+    sb.countplot(data=df,x=feat)
+    plt.legend()
+    plt.show()
+

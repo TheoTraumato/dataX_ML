@@ -2,6 +2,7 @@ from sklearn.model_selection import train_test_split
 
 import data_prep
 from sklearn import svm, metrics, model_selection
+from Roc_curve import plot_roc_curve
 
 from principal_component_analysis import get_principalComponents
 
@@ -15,8 +16,8 @@ x_train, x_test, y_train, y_test = data_prep.run(oversampling=True)
 params_linear = dict(kernel=[ 'linear'], C=[ 1.0, 0.1, 0.01, 0.001, 0.0001 ],)
 params_poly = dict(kernel=['poly'], C=[ 0.1, 0.05, 0.01, 0.001 ],
                    gamma=['scale', 'auto',  0.5, 0.1, 0.01 ], degree=[2,3,4])
-params_sigmoid = dict(kernel=['sigmoid'], C=[10, 0.1, 0.05, 0.01, ],
-                   gamma=['scale', 'auto', 10, 1.0,0.5, 0.1, 0.01 ])
+params_sigmoid = dict(kernel=['sigmoid'], C=[100, 10, 0.1 ],
+                   gamma=['scale', 'auto',  1.0, 0.1, 0.01, 0.001, 0.0001 ])
 params_rbf = dict(kernel=['rbf'], C=[10, 0.1, 0.05, 0.01, ],
                    gamma=['scale', 'auto', 10, 1.0,0.5, 0.1, 0.01 ])
 
@@ -36,7 +37,8 @@ params_rbf = dict(kernel=['rbf'], C=[10, 0.1, 0.05, 0.01, ],
 
 
 #f1_scorer = metrics.make_scorer(metrics.f1_score)
-'''grid_search = model_selection.GridSearchCV(estimator=svm.SVC(), param_grid=params_sigmoid, verbose=2,
+
+'''grid_search = model_selection.GridSearchCV(estimator=svm.SVC(), param_grid=params_rbf, verbose=2,
                                            return_train_score=True, n_jobs=1)
 grid_search.fit(x_train, y_train)
 print('Mean cross-validated score of the best_estimator: ', grid_search.best_score_)
@@ -45,9 +47,10 @@ print(grid_search.best_params_)'''
 
 
 #svm_clf = svm.SVC(**grid_search.best_params_).fit(x_train, y_train)
-svm_clf = svm.SVC(kernel='rbf',  C=0.01).fit(x_train, y_train)
+svm_clf = svm.SVC(kernel='linear',  C=0.01, probability=True).fit(x_train, y_train)
 
 val_pred = svm_clf.predict(x_test)
+
 
 # confusion matrix
 print(metrics.confusion_matrix(y_test, val_pred))
@@ -59,3 +62,5 @@ print("precision:", metrics.precision_score(y_test, val_pred))
 print("recall", metrics.recall_score(y_test, val_pred))
 # f1 score
 print("F1-Score", metrics.f1_score(y_test, val_pred))
+
+plot_roc_curve(svm_clf, x_test, y_test)
