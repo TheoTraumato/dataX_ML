@@ -1,11 +1,10 @@
 import sklearn
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_validate
+from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import f1_score, mean_squared_error
+from sklearn.metrics import f1_score
 import matplotlib.pyplot as plt
 from sklearn.tree import plot_tree
-from sklearn.metrics import mean_squared_error, mean_absolute_error, log_loss, confusion_matrix, accuracy_score, precision_score, recall_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 from Roc_curve import plot_roc_curve
 from data_prep import Data_Preperation
@@ -17,15 +16,15 @@ x_train, x_test, y_train, y_test = data_prep.run(oversampling=True)
 
 """"Mini"baum - Kein Prepruning"""
 
-'''
+
 tree = DecisionTreeClassifier(criterion='entropy', random_state=10)
 tree.fit(x_train, y_train)
 labels = tree.predict(x_test)
-#print(f"F1-Score kein Prepruning: {f1_score(labels, y_test)}")
+
 
 tree.get_depth()
 plt.figure(dpi=400)
-#plot_tree(tree, feature_names=["PCA1", "PCA2", "PCA3"]) # Baum mit mehrfachen Ebenen
+
 plot_tree(tree, feature_names=x_train.columns)  # Baum mit Kat.
 plt.show()
 y_pred = tree.predict(x_test)
@@ -37,12 +36,7 @@ plot_roc_curve(tree, x_test, y_test)
 
 
 
-'''
-#Baum mit Prepruning mit folgenden Parametern
-#max_depth = Default None, Max Tiefe
-#min_samples_split = Min Beispiele zur Aufteilung einer Node
-#min_samples_leaf = Default 1, Min Beispiel Blätter
-
+"""Optimierung der Parameter mit GridSearch"""
 
 tree = DecisionTreeClassifier()
 params = {'criterion': ['gini', 'entropy'], 'max_depth': range(2, 12), 'min_samples_split': range(2, 10, 2),

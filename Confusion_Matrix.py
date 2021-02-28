@@ -1,4 +1,4 @@
-from sklearn.metrics import classification_report, confusion_matrix
+
 import itertools
 import numpy as np
 import matplotlib.pyplot as plt

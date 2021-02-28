@@ -1,7 +1,4 @@
-import matplotlib.pyplot as mp
-import pandas as pd
-import seaborn as sb
-from sklearn import preprocessing
+
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, roc_auc_score
 from sklearn.decomposition import PCA
@@ -15,6 +12,13 @@ from sklearn.linear_model import LinearRegression, LogisticRegression
 
 
 def plot_roc_curve(fitted_clf, x_test, y_test):
+    """Plottet die ROC-Curve und gibt den AUC aus.
+
+    :param fitted_clf (Classifier): Der Classifier, der bereits auf die Trainingsdaten gefitted wurde
+    :param x_test (DataFrame): Die Testdaten der unabhöngigen Variablen
+    :param y_test (Series): Die Testdaten der abhängigen Variable
+    :return: None
+    """
     probs = fitted_clf.predict_proba(x_test)
     probs = probs[:,1]
     auc = roc_auc_score(y_test, probs)

@@ -1,5 +1,5 @@
 from data_prep import Data_Preperation
-import sklearn
+
 from sklearn.decomposition import PCA
 import pandas as pd
 import numpy as np
@@ -42,6 +42,7 @@ def get_principalComponents(x_train, x_test, n_components):
 
 
 if __name__ == '__main__':
+
 
     data_prep = Data_Preperation()
     x_train, x_test, y_train, y_test = data_prep.run(oversampling=False)

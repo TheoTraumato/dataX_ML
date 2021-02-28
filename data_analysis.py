@@ -6,6 +6,12 @@ import matplotlib.pyplot as plt
 
 
 def correlation_matrix(df):
+    """Berechne und plotte eine Korrelationsmatrix
+
+    :param df (DataFrame): Das Dateframe anhand dessen die Matrix erstellt werden soll.
+    Die Daten dürfen ausschließlich metrisch skaliert sein.
+    :return: None
+    """
     columns = df.columns
     index = df.index
     data = preprocessing.StandardScaler().fit_transform(df)
@@ -23,6 +29,12 @@ def correlation_matrix(df):
     mp.show()
 
 def distribution(df, feat):
+    """Stellt die Verteilung eines Features über den Datensatz, getrennt nach der unabhängigen Variable Churn, dar.
+
+    :param df (DataFrame): Der Datensatz, die Werte des Features müssen metrisch skaliert sein.
+    :param feat (String): Der Spaltenname des untersuchten Features
+    :return: None
+    """
     plt.figure()
     sb.distplot(df[df['Churn'] == 0][feat],  color='b', bins=20, label='No Churn')
     sb.distplot(df[df['Churn'] == 1][feat],  color='r', bins=20, label='Churn')
@@ -30,6 +42,12 @@ def distribution(df, feat):
     plt.show()
 
 def bar(df,feat):
+    """Stellt die Häufigkeit eines Merkmals im Datensatz als Balkendiagramm dar.
+
+    :param df (DataFrame): Der untersuchte Datensatz
+    :param feat (String): Der Spaltenname des untersuchten Features
+    :return: None
+    """
     plt.figure()
     sb.countplot(data=df,x=feat)
     plt.legend()
