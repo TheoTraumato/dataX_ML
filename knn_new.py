@@ -1,73 +1,50 @@
-import numpy as np
-import pandas as pd
-import sklearn
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split, cross_validate
-from sklearn.metrics import mean_squared_error, mean_absolute_error, log_loss, make_scorer, accuracy_score, \
-    precision_score, recall_score
-from sklearn.linear_model import Lasso, Ridge, LinearRegression
-from sklearn.preprocessing import StandardScaler, PolynomialFeatures
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
+from Roc_curve import plot_roc_curve
+from sklearn.metrics import classification_report, confusion_matrix
+from Confusion_Matrix import plot_confusion_matrix
 
 # Daten erstellen mit One Hot Encoding:
 from data_prep import Data_Preperation
-from principal_component_analysis import get_principalComponents
 
 data_prep = Data_Preperation()
-x_train, x_test, y_train, y_test = data_prep.run()
-
-# TODO: Features elimination, da KNN ungenau wird, je größer die Dimension
-
-#PCA:
-#x_train, x_test = get_principalComponents(x_train, x_test, 2)
+x_train, x_test, y_train, y_test = data_prep.run(standardize_data=True, oversampling=True)
 
 # KNN
-"""
-Berechnet den Abstand eines neuen Datenpunktes x zu allen anderen Trainingsdatenpunkten.
-K ist dabei die Anzahl der nächstgelegenen Punkte zu x.
-Mittels Cross Validation und anhand des F1 Scores wird das optimale k bestimmt
-"""
+
+#basis modell:
+knn = KNeighborsClassifier()
+knn_basis = knn.fit(x_train, y_train)
+y_pred_basis = knn_basis.predict(x_test)
+
+print("Accuracy for knn_basis: ", accuracy_score(y_test, y_pred_basis))
+print("Precision for knn_basis: ", precision_score(y_test, y_pred_basis))
+print("Recall for knn_basis: ", recall_score(y_test, y_pred_basis))
+
+# confusion matrix basis:
+knn_matrix = confusion_matrix(y_test, y_pred_basis)
+plot_confusion_matrix(knn_matrix, classes=['churn=0','churn=1'],normalize= False,  title='Confusion matrix')
 
 # CV für Ermittlung des optimalen k
 params = {"n_neighbors": range(1,100)}
-knn = KNeighborsClassifier()
-clf = GridSearchCV(knn, params, scoring="neg_log_loss", cv=10)
+clf = GridSearchCV(knn, params, scoring="roc_auc", cv=10)
 clf.fit(x_train, y_train)
 best_k = clf.best_params_["n_neighbors"]
 
 # train model:
 knn = KNeighborsClassifier(n_neighbors=best_k)
-knn.fit(x_train, y_train)
-y_pred = knn.predict(x_test)
+knn_clf = knn.fit(x_train, y_train)
+y_pred = knn_clf.predict(x_test)
 
 # evaluation
-from sklearn.metrics import classification_report, confusion_matrix
 score = knn.score(x_test, y_test)
 print("Accuracy for knn: ", accuracy_score(y_test, y_pred))
 print("Precision for knn: ", precision_score(y_test, y_pred))
 print("Recall for knn: ", recall_score(y_test, y_pred))
 print("Best_k used = ", best_k)
-print(classification_report(y_test, y_pred))
+print("ROC for opt. model: ", plot_roc_curve(knn_clf, x_test, y_test))
 
 # confusion matrix:
-from Confusion_Matrix import plot_confusion_matrix
 knn_matrix = confusion_matrix(y_test, y_pred)
-plot_confusion_matrix(knn_matrix, classes=['churn=1','churn=0'],normalize= False,  title='Confusion matrix')
-
-"""
-Accuracy for knn:  0.7792355961209355
-Best_k used =  85
-              precision    recall  f1-score   support
-
-           0       0.83      0.87      0.85      1260
-           1       0.62      0.54      0.58       493
-
-    accuracy                           0.78      1753
-   macro avg       0.73      0.71      0.72      1753
-weighted avg       0.77      0.78      0.77      1753
-
-Confusion matrix, without normalization
-[[1098  162]
- [ 225  268]]
- """
+plot_confusion_matrix(knn_matrix, classes=['churn=0','churn=1'],normalize= False,  title='Confusion matrix')
